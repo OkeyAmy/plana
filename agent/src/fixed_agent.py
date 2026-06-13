@@ -138,6 +138,8 @@ def render_room_blueprint(
               "width": float, "depth": float, "rotation": float, "color"?: str }
             x, y are center coordinates in cm. rotation in degrees (0/90/180/270).
             color: optional hex fill (e.g. "#f97316") for types not in the standard palette.
+            collidable: optional bool, default true. Set to false for flat/decorative
+              items that other furniture can sit on top of (rug, mat, plant).
         doors: List of doors. Each: { "wall": "north"|"south"|"east"|"west",
             "offset": int (cm from corner), "width": int (cm, typically 80) }
         windows: List of windows. Each: { "wall": "north"|"south"|"east"|"west",
@@ -247,6 +249,8 @@ Fewer accurate openings is always better than guessing wrong ones.
    - Leave at least 80 cm of walkway space between items
    - Beds go against the wall opposite the door (usually north)
    - Desks and wardrobes against side walls
+   - Rugs, mats, and plants are decorative — always set collidable: false for them
+     so other furniture can be placed on top
    - Never place furniture inside a door's swing zone: a square area of
      door_width × door_width starting from the door opening into the room
 

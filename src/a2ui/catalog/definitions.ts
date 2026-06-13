@@ -290,6 +290,7 @@ export const definitions = {
         depth: z.number(),
         rotation: z.number().optional(),
         color: z.string().optional(),
+        collidable: z.boolean().optional(),
       })).optional(),
       doors: z.array(z.object({
         wall: z.enum(["north", "south", "east", "west"]),

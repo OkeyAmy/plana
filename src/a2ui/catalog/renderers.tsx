@@ -1059,6 +1059,7 @@ type FurnitureItem = {
   depth: number;
   rotation?: number;
   color?: string;
+  collidable?: boolean;
 };
 type Door = { wall: "north" | "south" | "east" | "west"; offset: number; width?: number };
 type WinDef = { wall: "north" | "south" | "east" | "west"; start: number; end: number };
@@ -1390,8 +1391,12 @@ function FloorPlanSVG({
                     if (sx + w > canvasW - SNAP_PX) sx = canvasW - w;
                     if (sy + h > canvasH - SNAP_PX) sy = canvasH - h;
                     // collision detection — revert if overlapping any other piece
-                    const collision = items.some((other, idx) => {
+                    // non-collidable items (rugs, plants) are skipped as obstacles
+                    // and skip the whole check if the dragged item itself is non-collidable
+                    const draggable = item.collidable !== false;
+                    const collision = draggable && items.some((other, idx) => {
                       if (idx === i) return false;
+                      if (other.collidable === false) return false;
                       const oRot = other.rotation === 90 || other.rotation === 270;
                       const oEW = oRot ? other.depth : other.width;
                       const oEH = oRot ? other.width : other.depth;
