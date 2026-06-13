@@ -247,6 +247,8 @@ Fewer accurate openings is always better than guessing wrong ones.
    - Leave at least 80 cm of walkway space between items
    - Beds go against the wall opposite the door (usually north)
    - Desks and wardrobes against side walls
+   - Never place furniture inside a door's swing zone: a square area of
+     door_width × door_width starting from the door opening into the room
 
 4. Also place doors and windows:
    - 1-2 doors: pick a wall, offset from the corner in cm, width 80 cm.

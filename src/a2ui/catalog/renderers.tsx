@@ -1128,34 +1128,45 @@ function hexIsDark(hex: string): boolean {
   return (r * 299 + g * 587 + b * 114) / 1000 < 128;
 }
 
+function doorBBox(door: Door, scale: number, canvasW: number, canvasH: number) {
+  const dw = (door.width ?? 80) * scale;
+  const off = door.offset * scale;
+  switch (door.wall) {
+    case "west":  return { x: 0,            y: off,           w: dw, h: dw };
+    case "east":  return { x: canvasW - dw, y: off,           w: dw, h: dw };
+    case "north": return { x: off,           y: 0,            w: dw, h: dw };
+    case "south": return { x: off,           y: canvasH - dw, w: dw, h: dw };
+  }
+}
+
+const SWING_FILL = "rgba(180,180,180,0.18)";
+const SWING_STROKE = "#999";
+
 function DoorFeature({ door, scale, canvasW, canvasH }: { door: Door; scale: number; canvasW: number; canvasH: number }) {
   const dw = (door.width ?? 80) * scale;
   const off = door.offset * scale;
   const cover = 7;
+  const sw = { fill: SWING_FILL, stroke: SWING_STROKE, strokeWidth: 1.5, strokeDasharray: "4,2" } as const;
   switch (door.wall) {
     case "west":
       return <g>
         <rect x={0} y={off} width={cover} height={dw} fill="#f5f0eb" />
-        <line x1={0} y1={off} x2={dw} y2={off} stroke="#888" strokeWidth={1.5} />
-        <path d={`M ${dw} ${off} A ${dw} ${dw} 0 0 1 0 ${off + dw}`} fill="none" stroke="#888" strokeWidth={1.5} strokeDasharray="4,2" />
+        <path d={`M 0 ${off} L ${dw} ${off} A ${dw} ${dw} 0 0 1 0 ${off + dw} Z`} {...sw} />
       </g>;
     case "east":
       return <g>
         <rect x={canvasW - cover} y={off} width={cover} height={dw} fill="#f5f0eb" />
-        <line x1={canvasW} y1={off} x2={canvasW - dw} y2={off} stroke="#888" strokeWidth={1.5} />
-        <path d={`M ${canvasW - dw} ${off} A ${dw} ${dw} 0 0 0 ${canvasW} ${off + dw}`} fill="none" stroke="#888" strokeWidth={1.5} strokeDasharray="4,2" />
+        <path d={`M ${canvasW} ${off} L ${canvasW - dw} ${off} A ${dw} ${dw} 0 0 0 ${canvasW} ${off + dw} Z`} {...sw} />
       </g>;
     case "north":
       return <g>
         <rect x={off} y={0} width={dw} height={cover} fill="#f5f0eb" />
-        <line x1={off} y1={0} x2={off} y2={dw} stroke="#888" strokeWidth={1.5} />
-        <path d={`M ${off} ${dw} A ${dw} ${dw} 0 0 0 ${off + dw} 0`} fill="none" stroke="#888" strokeWidth={1.5} strokeDasharray="4,2" />
+        <path d={`M ${off} 0 L ${off} ${dw} A ${dw} ${dw} 0 0 0 ${off + dw} 0 Z`} {...sw} />
       </g>;
     case "south":
       return <g>
         <rect x={off} y={canvasH - cover} width={dw} height={cover} fill="#f5f0eb" />
-        <line x1={off} y1={canvasH} x2={off} y2={canvasH - dw} stroke="#888" strokeWidth={1.5} />
-        <path d={`M ${off} ${canvasH - dw} A ${dw} ${dw} 0 0 1 ${off + dw} ${canvasH}`} fill="none" stroke="#888" strokeWidth={1.5} strokeDasharray="4,2" />
+        <path d={`M ${off} ${canvasH} L ${off} ${canvasH - dw} A ${dw} ${dw} 0 0 1 ${off + dw} ${canvasH} Z`} {...sw} />
       </g>;
   }
 }
@@ -1352,7 +1363,11 @@ function FloorPlanSVG({
                       const oY = Math.round((other.y - oEH / 2) * scale);
                       return boxesOverlap(sx, sy, w, h, oX, oY, oW, oH);
                     });
-                    if (collision) {
+                    const doorCollision = doors.some(door => {
+                      const z = doorBBox(door, scale, canvasW, canvasH);
+                      return boxesOverlap(sx, sy, w, h, z.x, z.y, z.w, z.h);
+                    });
+                    if (collision || doorCollision) {
                       setCollisionWarning(true);
                       setTimeout(() => setCollisionWarning(false), 1800);
                       return;
