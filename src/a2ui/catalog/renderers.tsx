@@ -1063,14 +1063,43 @@ type Door = { wall: "north" | "south" | "east" | "west"; offset: number; width?:
 type WinDef = { wall: "north" | "south" | "east" | "west"; start: number; end: number };
 
 const FURNITURE_COLORS: Record<string, [string, string]> = {
-  bed:      ["#a3bffa", "#1e40af"],
-  wardrobe: ["#c4b5fd", "#6d28d9"],
-  desk:     ["#6ee7b7", "#065f46"],
-  sofa:     ["#fca5a5", "#991b1b"],
-  table:    ["#fde68a", "#92400e"],
-  chair:    ["#fdba74", "#92400e"],
-  shelf:    ["#d1d5db", "#374151"],
-  tv_stand: ["#a5b4fc", "#3730a3"],
+  // bedroom
+  bed:             ["#a3bffa", "#1e40af"],
+  single_bed:      ["#bfdbfe", "#1e40af"],
+  wardrobe:        ["#c4b5fd", "#6d28d9"],
+  nightstand:      ["#ddd6fe", "#6d28d9"],
+  dresser:         ["#e9d5ff", "#7e22ce"],
+  // living / office
+  sofa:            ["#fca5a5", "#991b1b"],
+  armchair:        ["#fecaca", "#991b1b"],
+  coffee_table:    ["#fde68a", "#92400e"],
+  tv_stand:        ["#a5b4fc", "#3730a3"],
+  bookcase:        ["#d1d5db", "#374151"],
+  desk:            ["#6ee7b7", "#065f46"],
+  office_chair:    ["#a7f3d0", "#065f46"],
+  shelf:           ["#d1d5db", "#374151"],
+  // dining
+  table:           ["#fde68a", "#92400e"],
+  dining_table:    ["#fcd34d", "#92400e"],
+  chair:           ["#fdba74", "#92400e"],
+  // kitchen
+  cooker:          ["#f97316", "#7c2d12"],
+  fridge:          ["#bae6fd", "#0c4a6e"],
+  countertop:      ["#e5e7eb", "#374151"],
+  kitchen_sink:    ["#bae6fd", "#0369a1"],
+  dishwasher:      ["#cbd5e1", "#334155"],
+  kitchen_island:  ["#f1f5f9", "#334155"],
+  microwave:       ["#94a3b8", "#1e293b"],
+  // bathroom
+  bathtub:         ["#e0f2fe", "#0369a1"],
+  shower:          ["#bae6fd", "#0284c7"],
+  toilet:          ["#f8fafc", "#64748b"],
+  sink:            ["#e0f2fe", "#0369a1"],
+  washing_machine: ["#dbeafe", "#1d4ed8"],
+  // utility
+  plant:           ["#bbf7d0", "#166534"],
+  rug:             ["#fce7f3", "#9d174d"],
+  piano:           ["#1e293b", "#0f172a"],
 };
 
 const SNAP_PX = 14;

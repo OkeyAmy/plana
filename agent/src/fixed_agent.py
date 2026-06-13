@@ -19,14 +19,43 @@ from src.catalog import CATALOG_ID, CATALOG_PROMPT
 SURFACE = "room-blueprint"
 
 FURNITURE_CATALOG = {
-    "bed":      {"width": 160, "depth": 200},
-    "wardrobe": {"width": 120, "depth": 60},
-    "desk":     {"width": 140, "depth": 70},
-    "sofa":     {"width": 200, "depth": 90},
-    "table":    {"width": 120, "depth": 80},
-    "chair":    {"width": 60,  "depth": 60},
-    "shelf":    {"width": 100, "depth": 30},
-    "tv_stand": {"width": 150, "depth": 45},
+    # bedroom
+    "bed":              {"width": 160, "depth": 200},
+    "single_bed":       {"width": 90,  "depth": 200},
+    "wardrobe":         {"width": 120, "depth": 60},
+    "nightstand":       {"width": 50,  "depth": 50},
+    "dresser":          {"width": 100, "depth": 50},
+    # living / office
+    "sofa":             {"width": 200, "depth": 90},
+    "armchair":         {"width": 85,  "depth": 85},
+    "coffee_table":     {"width": 110, "depth": 60},
+    "tv_stand":         {"width": 150, "depth": 45},
+    "bookcase":         {"width": 100, "depth": 35},
+    "desk":             {"width": 140, "depth": 70},
+    "office_chair":     {"width": 65,  "depth": 65},
+    "shelf":            {"width": 100, "depth": 30},
+    # dining
+    "table":            {"width": 120, "depth": 80},
+    "dining_table":     {"width": 160, "depth": 90},
+    "chair":            {"width": 60,  "depth": 60},
+    # kitchen
+    "cooker":           {"width": 60,  "depth": 60},
+    "fridge":           {"width": 60,  "depth": 70},
+    "countertop":       {"width": 200, "depth": 60},
+    "kitchen_sink":     {"width": 80,  "depth": 55},
+    "dishwasher":       {"width": 60,  "depth": 60},
+    "kitchen_island":   {"width": 120, "depth": 80},
+    "microwave":        {"width": 50,  "depth": 40},
+    # bathroom
+    "bathtub":          {"width": 170, "depth": 75},
+    "shower":           {"width": 90,  "depth": 90},
+    "toilet":           {"width": 40,  "depth": 70},
+    "sink":             {"width": 60,  "depth": 50},
+    "washing_machine":  {"width": 60,  "depth": 60},
+    # utility
+    "plant":            {"width": 40,  "depth": 40},
+    "rug":              {"width": 160, "depth": 230},
+    "piano":            {"width": 150, "depth": 60},
 }
 
 
@@ -50,14 +79,24 @@ def generate_svg(room_w: int, room_h: int, items: list[dict]) -> str:
     svg += f'<rect x="2" y="2" width="{room_w-4}" height="{room_h-4}" fill="none" stroke="#333" stroke-width="4"/>'
 
     colors = {
-        "bed": ("#a3bffa", "#1e40af"),
-        "wardrobe": ("#c4b5fd", "#6d28d9"),
-        "desk": ("#6ee7b7", "#065f46"),
-        "sofa": ("#fca5a5", "#991b1b"),
-        "table": ("#fde68a", "#92400e"),
+        "bed": ("#a3bffa", "#1e40af"), "single_bed": ("#bfdbfe", "#1e40af"),
+        "wardrobe": ("#c4b5fd", "#6d28d9"), "nightstand": ("#ddd6fe", "#6d28d9"),
+        "dresser": ("#e9d5ff", "#7e22ce"),
+        "sofa": ("#fca5a5", "#991b1b"), "armchair": ("#fecaca", "#991b1b"),
+        "coffee_table": ("#fde68a", "#92400e"), "tv_stand": ("#a5b4fc", "#3730a3"),
+        "bookcase": ("#d1d5db", "#374151"), "desk": ("#6ee7b7", "#065f46"),
+        "office_chair": ("#a7f3d0", "#065f46"), "shelf": ("#d1d5db", "#374151"),
+        "table": ("#fde68a", "#92400e"), "dining_table": ("#fcd34d", "#92400e"),
         "chair": ("#fdba74", "#92400e"),
-        "shelf": ("#d1d5db", "#374151"),
-        "tv_stand": ("#a5b4fc", "#3730a3"),
+        "cooker": ("#f97316", "#7c2d12"), "fridge": ("#bae6fd", "#0c4a6e"),
+        "countertop": ("#e5e7eb", "#374151"), "kitchen_sink": ("#bae6fd", "#0369a1"),
+        "dishwasher": ("#cbd5e1", "#334155"), "kitchen_island": ("#f1f5f9", "#334155"),
+        "microwave": ("#94a3b8", "#1e293b"),
+        "bathtub": ("#e0f2fe", "#0369a1"), "shower": ("#bae6fd", "#0284c7"),
+        "toilet": ("#f8fafc", "#64748b"), "sink": ("#e0f2fe", "#0369a1"),
+        "washing_machine": ("#dbeafe", "#1d4ed8"),
+        "plant": ("#bbf7d0", "#166534"), "rug": ("#fce7f3", "#9d174d"),
+        "piano": ("#1e293b", "#0f172a"),
     }
 
     for item in items:
@@ -131,9 +170,15 @@ You are an AI home designer. When the user describes a room or uploads a floor p
 1. Understand the room type (bedroom, living room, office, etc.) and dimensions.
    If no dimensions are given, assume a reasonable default (e.g. 520x430 cm for a bedroom).
 
-2. Select 3-6 appropriate furniture items from this catalog:
-   bed (160x200), wardrobe (120x60), desk (140x70), sofa (200x90),
-   table (120x80), chair (60x60), shelf (100x30), tv_stand (150x45)
+2. Select appropriate items for the room. Use realistic dimensions (in cm).
+   Common defaults — bedroom: bed 160×200, wardrobe 120×60, nightstand 50×50,
+   desk 140×70; living: sofa 200×90, armchair 85×85, coffee_table 110×60,
+   tv_stand 150×45; kitchen: cooker 60×60, fridge 60×70, countertop 200×60,
+   kitchen_sink 80×55; bathroom: bathtub 170×75, toilet 40×70, sink 60×50.
+   The `type` field can be ANY snake_case label that describes the object
+   (cooker, bathtub, piano, plant, etc.) — always supply explicit width and
+   depth so the renderer knows the size. Do not map unknown items to the
+   nearest catalog type; use the correct name.
 
 3. Place furniture using these rules:
    - rotation 90 or 270 swaps width↔depth. Always use the EFFECTIVE dimensions after rotation for wall offsets.
