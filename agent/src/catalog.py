@@ -69,8 +69,10 @@ component must have `id: "root"`.
 
 
 ### Floor plan
-- **FloorPlanSVG** { svg: string, title?: string }
-    Renders a complete room floor plan from a raw SVG string. Use when the agent has calculated and generated a room layout blueprint.
+- **FloorPlanSVG** { svg: string, title?: string, room?: {width,height}, furniture?: [...], doors?: [...], windows?: [...] }
+    Interactive draggable floor plan. `furniture` items: {type,x,y,width,depth,rotation?}.
+    `doors`: [{wall: north|south|east|west, offset: cm, width?: cm}].
+    `windows`: [{wall, start: cm, end: cm}]. Always pass room+furniture+doors+windows for the full interactive view.
 
 ### Rules
 1. Exactly one component has id="root". Everything else must be reachable from root.

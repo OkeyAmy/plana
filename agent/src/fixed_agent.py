@@ -84,6 +84,8 @@ def render_room_blueprint(
     room_width: int,
     room_height: int,
     furniture: list[dict],
+    doors: list[dict],
+    windows: list[dict],
     summary: str,
 ) -> str:
     """Render the room floor plan as an SVG blueprint via A2UI.
@@ -95,9 +97,11 @@ def render_room_blueprint(
         furniture: List of placed items. Each item:
             { "type": str, "x": float, "y": float,
               "width": float, "depth": float, "rotation": float }
-            - x, y: center position in cm
-            - rotation: degrees (0 = no rotation)
-            - type: one of bed/wardrobe/desk/sofa/table/chair/shelf/tv_stand
+            x, y are center coordinates in cm. rotation in degrees (0/90/180/270).
+        doors: List of doors. Each: { "wall": "north"|"south"|"east"|"west",
+            "offset": int (cm from corner), "width": int (cm, typically 80) }
+        windows: List of windows. Each: { "wall": "north"|"south"|"east"|"west",
+            "start": int (cm from corner), "end": int (cm from corner) }
         summary: One sentence describing the layout.
     """
     svg = generate_svg(room_width, room_height, furniture)
@@ -113,6 +117,8 @@ def render_room_blueprint(
                     "title": title,
                     "room": {"width": room_width, "height": room_height},
                     "furniture": furniture,
+                    "doors": doors,
+                    "windows": windows,
                 }],
             ),
         ]
@@ -137,10 +143,15 @@ You are an AI home designer. When the user describes a room or uploads a floor p
    - Beds go against the wall opposite the door (usually north)
    - Desks and wardrobes against side walls
 
-4. Call render_room_blueprint ONCE with:
-   - The room dimensions
-   - All placed furniture items with (x, y) center coordinates and rotation
-   - A short title
+4. Also place doors and windows:
+   - 1-2 doors: pick a wall, offset from the corner in cm, width 80 cm.
+     Keep offset >= 50 and offset+80 <= wall_length-50 so it's not in a corner.
+   - 0-2 windows: pick a wall, start/end in cm (window is at least 80 cm wide).
+     Keep start >= 50 and end <= wall_length-50.
+   - Do NOT place doors and windows on the same wall segment.
+
+5. Call render_room_blueprint ONCE with:
+   - The room dimensions, furniture, doors, windows, and a short title.
 
 After rendering, offer one brief suggestion for improvement.
 

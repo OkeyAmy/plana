@@ -15,5 +15,12 @@ OFFLINE_BLUEPRINT_ARGS: dict[str, Any] = {
         {"type": "wardrobe", "x": 64,  "y": 320, "width": 120, "depth": 60,  "rotation": 0},
         {"type": "desk",     "x": 450, "y": 250, "width": 140, "depth": 70,  "rotation": 90},
     ],
+    "doors": [
+        {"wall": "south", "offset": 200, "width": 80},
+    ],
+    "windows": [
+        {"wall": "north", "start": 140, "end": 360},
+        {"wall": "east",  "start": 100, "end": 220},
+    ],
     "summary": "A clean bedroom with bed on the north wall, wardrobe on the west, and desk on the east.",
 }

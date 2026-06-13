@@ -277,7 +277,7 @@ export const definitions = {
 
   FloorPlanSVG: {
     description:
-      "Renders an interactive, draggable room floor plan. Pass `room` dimensions, `furniture` list with center coordinates, and the pre-generated `svg` fallback string.",
+      "Renders an interactive, draggable room floor plan. Pass `room` dimensions, `furniture` list with center coordinates, optional `doors` and `windows`, and the pre-generated `svg` fallback string.",
     props: z.object({
       svg: z.string(),
       title: z.string().optional(),
@@ -289,6 +289,16 @@ export const definitions = {
         width: z.number(),
         depth: z.number(),
         rotation: z.number().optional(),
+      })).optional(),
+      doors: z.array(z.object({
+        wall: z.enum(["north", "south", "east", "west"]),
+        offset: z.number(),
+        width: z.number().optional(),
+      })).optional(),
+      windows: z.array(z.object({
+        wall: z.enum(["north", "south", "east", "west"]),
+        start: z.number(),
+        end: z.number(),
       })).optional(),
     }),
   },

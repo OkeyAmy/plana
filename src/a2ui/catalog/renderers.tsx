@@ -1059,6 +1059,8 @@ type FurnitureItem = {
   depth: number;
   rotation?: number;
 };
+type Door = { wall: "north" | "south" | "east" | "west"; offset: number; width?: number };
+type WinDef = { wall: "north" | "south" | "east" | "west"; start: number; end: number };
 
 const FURNITURE_COLORS: Record<string, [string, string]> = {
   bed:      ["#a3bffa", "#1e40af"],
@@ -1071,6 +1073,50 @@ const FURNITURE_COLORS: Record<string, [string, string]> = {
   tv_stand: ["#a5b4fc", "#3730a3"],
 };
 
+const SNAP_PX = 14;
+
+function DoorFeature({ door, scale, canvasW, canvasH }: { door: Door; scale: number; canvasW: number; canvasH: number }) {
+  const dw = (door.width ?? 80) * scale;
+  const off = door.offset * scale;
+  const cover = 7;
+  switch (door.wall) {
+    case "west":
+      return <g>
+        <rect x={0} y={off} width={cover} height={dw} fill="#f5f0eb" />
+        <line x1={0} y1={off} x2={dw} y2={off} stroke="#888" strokeWidth={1.5} />
+        <path d={`M ${dw} ${off} A ${dw} ${dw} 0 0 1 0 ${off + dw}`} fill="none" stroke="#888" strokeWidth={1.5} strokeDasharray="4,2" />
+      </g>;
+    case "east":
+      return <g>
+        <rect x={canvasW - cover} y={off} width={cover} height={dw} fill="#f5f0eb" />
+        <line x1={canvasW} y1={off} x2={canvasW - dw} y2={off} stroke="#888" strokeWidth={1.5} />
+        <path d={`M ${canvasW - dw} ${off} A ${dw} ${dw} 0 0 0 ${canvasW} ${off + dw}`} fill="none" stroke="#888" strokeWidth={1.5} strokeDasharray="4,2" />
+      </g>;
+    case "north":
+      return <g>
+        <rect x={off} y={0} width={dw} height={cover} fill="#f5f0eb" />
+        <line x1={off} y1={0} x2={off} y2={dw} stroke="#888" strokeWidth={1.5} />
+        <path d={`M ${off} ${dw} A ${dw} ${dw} 0 0 0 ${off + dw} 0`} fill="none" stroke="#888" strokeWidth={1.5} strokeDasharray="4,2" />
+      </g>;
+    case "south":
+      return <g>
+        <rect x={off} y={canvasH - cover} width={dw} height={cover} fill="#f5f0eb" />
+        <line x1={off} y1={canvasH} x2={off} y2={canvasH - dw} stroke="#888" strokeWidth={1.5} />
+        <path d={`M ${off} ${canvasH - dw} A ${dw} ${dw} 0 0 1 ${off + dw} ${canvasH}`} fill="none" stroke="#888" strokeWidth={1.5} strokeDasharray="4,2" />
+      </g>;
+  }
+}
+
+function WindowFeature({ win, scale, canvasW, canvasH }: { win: WinDef; scale: number; canvasW: number; canvasH: number }) {
+  const s = win.start * scale, e = win.end * scale;
+  switch (win.wall) {
+    case "north": return <line x1={s} y1={0} x2={e} y2={0} stroke="#60a5fa" strokeWidth={5} />;
+    case "south": return <line x1={s} y1={canvasH} x2={e} y2={canvasH} stroke="#60a5fa" strokeWidth={5} />;
+    case "west":  return <line x1={0} y1={s} x2={0} y2={e} stroke="#60a5fa" strokeWidth={5} />;
+    case "east":  return <line x1={canvasW} y1={s} x2={canvasW} y2={e} stroke="#60a5fa" strokeWidth={5} />;
+  }
+}
+
 function FloorPlanSVG({
   props,
 }: RendererProps<{
@@ -1078,6 +1124,8 @@ function FloorPlanSVG({
   title?: string;
   room?: { width: number; height: number };
   furniture?: FurnitureItem[];
+  doors?: Door[];
+  windows?: WinDef[];
 }>) {
   const [items, setItems] = useState<FurnitureItem[]>(props.furniture ?? []);
 
@@ -1092,55 +1140,124 @@ function FloorPlanSVG({
     );
   }
 
-  const MAX_W = 560;
+  const MAX_W = 520;
   const MAX_H = 440;
   const scale = Math.min(MAX_W / props.room!.width, MAX_H / props.room!.height, 1.2);
   const canvasW = Math.round(props.room!.width * scale);
   const canvasH = Math.round(props.room!.height * scale);
+  const doors = props.doors ?? [];
+  const windows = props.windows ?? [];
 
   return (
     <div style={{ background: "var(--card)", borderRadius: "var(--radius-md)", border: "1px solid var(--border-container)", padding: 16 }}>
       {props.title && (
-        <p style={{ color: "var(--text-primary)", fontWeight: 600, marginBottom: 12, fontSize: 15 }}>
+        <p style={{ color: "var(--text-primary)", fontWeight: 600, marginBottom: 10, fontSize: 15 }}>
           {props.title}
-          <span style={{ fontWeight: 400, fontSize: 12, color: "var(--text-secondary)", marginLeft: 8 }}>drag to rearrange</span>
+          <span style={{ fontWeight: 400, fontSize: 11, color: "var(--text-secondary)", marginLeft: 8 }}>drag · ↻ rotate</span>
         </p>
       )}
-      <div style={{ position: "relative", width: canvasW, height: canvasH, background: "#f5f0eb", border: "3px solid #333", borderRadius: 4, overflow: "hidden" }}>
-        {items.map((item, i) => {
-          const [fill, stroke] = FURNITURE_COLORS[item.type] ?? ["#e5e7eb", "#374151"];
-          // rotation 90/270 swaps width↔depth for both box size and center→top-left offset
-          const isRotated = item.rotation === 90 || item.rotation === 270;
-          const effectiveW = isRotated ? item.depth : item.width;
-          const effectiveH = isRotated ? item.width : item.depth;
-          const w = Math.round(effectiveW * scale);
-          const h = Math.round(effectiveH * scale);
-          const x = Math.round((item.x - effectiveW / 2) * scale);
-          const y = Math.round((item.y - effectiveH / 2) * scale);
-          return (
-            <Rnd
-              key={i}
-              position={{ x, y }}
-              size={{ width: w, height: h }}
-              bounds="parent"
-              enableResizing={false}
-              onDragStop={(_e, d) => {
-                setItems((prev) =>
-                  prev.map((it, idx) =>
-                    idx === i
-                      ? { ...it, x: d.x / scale + effectiveW / 2, y: d.y / scale + effectiveH / 2 }
-                      : it,
-                  ),
-                );
-              }}
-              style={{ background: fill, border: `2px solid ${stroke}`, borderRadius: 3, cursor: "grab", display: "flex", alignItems: "center", justifyContent: "center" }}
-            >
-              <span style={{ fontSize: Math.max(9, Math.min(13, w / 6)), color: stroke, fontWeight: 600, pointerEvents: "none", textAlign: "center", lineHeight: 1.2 }}>
-                {item.type.replace("_", " ")}
-              </span>
-            </Rnd>
-          );
-        })}
+
+      {/* Room with dimension labels */}
+      <div style={{ display: "inline-flex", alignItems: "flex-start", gap: 6 }}>
+
+        {/* Height label */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: canvasH, width: 28 }}>
+          <span style={{ fontSize: 10, color: "#888", writingMode: "vertical-rl", transform: "rotate(180deg)", userSelect: "none" }}>
+            {props.room!.height} cm
+          </span>
+        </div>
+
+        <div>
+          {/* Canvas */}
+          <div style={{ position: "relative", width: canvasW, height: canvasH }}>
+
+            {/* SVG layer: background + walls + doors + windows */}
+            <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+                 viewBox={`0 0 ${canvasW} ${canvasH}`}>
+              <rect x={0} y={0} width={canvasW} height={canvasH} fill="#f5f0eb" />
+              <rect x={0} y={0} width={canvasW} height={canvasH} fill="none" stroke="#333" strokeWidth={4} />
+              {doors.map((d, i) => <DoorFeature key={i} door={d} scale={scale} canvasW={canvasW} canvasH={canvasH} />)}
+              {windows.map((w, i) => <WindowFeature key={i} win={w} scale={scale} canvasW={canvasW} canvasH={canvasH} />)}
+            </svg>
+
+            {/* Furniture layer */}
+            {items.map((item, i) => {
+              const [fill, stroke] = FURNITURE_COLORS[item.type] ?? ["#e5e7eb", "#374151"];
+              const isRotated = item.rotation === 90 || item.rotation === 270;
+              const effectiveW = isRotated ? item.depth : item.width;
+              const effectiveH = isRotated ? item.width : item.depth;
+              const w = Math.round(effectiveW * scale);
+              const h = Math.round(effectiveH * scale);
+              const x = Math.round((item.x - effectiveW / 2) * scale);
+              const y = Math.round((item.y - effectiveH / 2) * scale);
+              const fontSize = Math.max(8, Math.min(12, w / 6));
+              const showDims = w > 36 && h > 24;
+
+              return (
+                <Rnd
+                  key={i}
+                  position={{ x, y }}
+                  size={{ width: w, height: h }}
+                  bounds="parent"
+                  enableResizing={false}
+                  onDragStop={(_e, d) => {
+                    // snap to wall
+                    let sx = d.x, sy = d.y;
+                    if (sx < SNAP_PX) sx = 0;
+                    if (sy < SNAP_PX) sy = 0;
+                    if (sx + w > canvasW - SNAP_PX) sx = canvasW - w;
+                    if (sy + h > canvasH - SNAP_PX) sy = canvasH - h;
+                    setItems((prev) =>
+                      prev.map((it, idx) =>
+                        idx === i
+                          ? { ...it, x: sx / scale + effectiveW / 2, y: sy / scale + effectiveH / 2 }
+                          : it,
+                      ),
+                    );
+                  }}
+                  style={{ background: fill, border: `2px solid ${stroke}`, borderRadius: 3, cursor: "grab", zIndex: 2 }}
+                >
+                  <div style={{ width: "100%", height: "100%", position: "relative", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                    <span style={{ fontSize, color: stroke, fontWeight: 600, pointerEvents: "none", textAlign: "center", lineHeight: 1.2 }}>
+                      {item.type.replace("_", " ")}
+                    </span>
+                    {showDims && (
+                      <span style={{ fontSize: fontSize - 1, color: stroke, opacity: 0.7, pointerEvents: "none" }}>
+                        {item.width}×{item.depth}
+                      </span>
+                    )}
+                    {/* Rotate button */}
+                    <button
+                      onMouseDown={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setItems((prev) =>
+                          prev.map((it, idx) =>
+                            idx === i ? { ...it, rotation: ((it.rotation ?? 0) + 90) % 360 } : it,
+                          ),
+                        );
+                      }}
+                      style={{
+                        position: "absolute", top: 2, right: 2,
+                        width: 16, height: 16, borderRadius: "50%",
+                        border: `1px solid ${stroke}`, background: "rgba(255,255,255,0.75)",
+                        cursor: "pointer", fontSize: 10, padding: 0, lineHeight: 1,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                      }}
+                    >
+                      ↻
+                    </button>
+                  </div>
+                </Rnd>
+              );
+            })}
+          </div>
+
+          {/* Width label */}
+          <div style={{ textAlign: "center", fontSize: 10, color: "#888", marginTop: 4, userSelect: "none" }}>
+            {props.room!.width} cm
+          </div>
+        </div>
       </div>
     </div>
   );
