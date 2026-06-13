@@ -1137,6 +1137,7 @@ function FloorPlanSVG({
   windows?: WinDef[];
 }>) {
   const [items, setItems] = useState<FurnitureItem[]>(props.furniture ?? []);
+  const [collisionWarning, setCollisionWarning] = useState(false);
 
   const hasDraggable = props.furniture && props.furniture.length > 0 && props.room;
 
@@ -1179,6 +1180,18 @@ function FloorPlanSVG({
         <div>
           {/* Canvas */}
           <div style={{ position: "relative", width: canvasW, height: canvasH }}>
+
+            {/* Collision warning */}
+            {collisionWarning && (
+              <div style={{
+                position: "absolute", top: 8, left: "50%", transform: "translateX(-50%)",
+                background: "#fef3c7", border: "1px solid #f59e0b", borderRadius: 6,
+                padding: "4px 12px", fontSize: 11, fontWeight: 600, color: "#92400e",
+                whiteSpace: "nowrap", pointerEvents: "none", zIndex: 20,
+              }}>
+                Can't place here — overlapping another piece
+              </div>
+            )}
 
             {/* SVG layer: background + walls + doors + windows */}
             <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
@@ -1228,7 +1241,11 @@ function FloorPlanSVG({
                       const oY = Math.round((other.y - oEH / 2) * scale);
                       return boxesOverlap(sx, sy, w, h, oX, oY, oW, oH);
                     });
-                    if (collision) return; // react-rnd reverts to controlled position
+                    if (collision) {
+                      setCollisionWarning(true);
+                      setTimeout(() => setCollisionWarning(false), 1800);
+                      return;
+                    }
                     setItems((prev) =>
                       prev.map((it, idx) =>
                         idx === i
