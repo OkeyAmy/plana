@@ -1252,8 +1252,8 @@ function FloorPlanSVG({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ furnitureType: type }),
       });
-      const data = await res.json() as SearchData;
-      setSearchResults(data);
+      const data = await res.json() as Partial<SearchData>;
+      setSearchResults({ texts: data.texts ?? [], images: data.images ?? [] });
     } catch {
       setSearchResults({ texts: [], images: [] });
     } finally {
@@ -1510,9 +1510,9 @@ function FloorPlanSVG({
           {!isSearching && searchResults && (
             <>
               {/* Image strip */}
-              {searchResults.images.length > 0 && (
+              {(searchResults.images ?? []).length > 0 && (
                 <div style={{ display: "flex", gap: 6, overflowX: "auto", marginBottom: 12, paddingBottom: 4 }}>
-                  {searchResults.images.slice(0, 6).map((img, k) => (
+                  {(searchResults.images ?? []).slice(0, 6).map((img, k) => (
                     <img key={k} src={img.url} alt={img.name ?? ""} loading="lazy"
                       style={{ width: 72, height: 72, objectFit: "cover", borderRadius: 6, flexShrink: 0, border: "1px solid #e5e7eb" }}
                       onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
@@ -1522,10 +1522,10 @@ function FloorPlanSVG({
               )}
 
               {/* Product cards */}
-              {searchResults.texts.length === 0 && (
+              {(searchResults.texts ?? []).length === 0 && (
                 <p style={{ fontSize: 12, color: "#6b7280", textAlign: "center", marginTop: 16 }}>No results found.</p>
               )}
-              {searchResults.texts.map((item, k) => (
+              {(searchResults.texts ?? []).map((item, k) => (
                 <div key={k} style={{ marginBottom: 8, padding: "9px 10px", background: "#f9fafb", borderRadius: 8, border: "1px solid #e5e7eb" }}>
                   <div style={{ display: "flex", alignItems: "flex-start", gap: 6, marginBottom: 4 }}>
                     {item.favicon && (

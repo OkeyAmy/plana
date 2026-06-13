@@ -32,11 +32,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: text }, { status: res.status });
     }
 
-    const data = await res.json() as { results?: unknown[] };
-    const results = data.results ?? [];
+    const data = await res.json() as Record<string, unknown>;
 
-    const texts = results.filter((r) => (r as { type: string }).type === "text");
-    const images = results.filter((r) => (r as { type: string }).type === "image");
+    // Linkup may nest results under different keys depending on version
+    const rawResults: unknown[] =
+      (Array.isArray(data.results) ? data.results :
+       Array.isArray(data.output) ? data.output :
+       Array.isArray(data) ? data as unknown[] : []) as unknown[];
+
+    const texts = rawResults.filter((r) => (r as { type: string }).type === "text");
+    const images = rawResults.filter((r) => (r as { type: string }).type === "image");
 
     return NextResponse.json({ texts, images });
   } catch (err) {
