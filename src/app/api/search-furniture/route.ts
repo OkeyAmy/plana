@@ -65,9 +65,9 @@ async function handler(req: NextRequest) {
     console.log("[search-furniture] keys:", Object.keys(data));
     console.log("[search-furniture] snippet:", JSON.stringify(data).slice(0, 500));
 
-    // structured output: data itself matches the schema, or nested under "output"
-    const structured = (data.output ?? data) as { products?: unknown[] };
-    const products = Array.isArray(structured.products) ? structured.products : [];
+    // Linkup wraps structured output under "data"; falls back to top-level
+    const inner = (data.data ?? data.output ?? data) as { products?: unknown[] };
+    const products = Array.isArray(inner.products) ? inner.products : [];
 
     return NextResponse.json({ products });
   } catch (err) {
