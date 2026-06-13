@@ -1209,6 +1209,7 @@ function FloorPlanSVG({
 }>) {
   const [items, setItems] = useState<FurnitureItem[]>(props.furniture ?? []);
   const [collisionWarning, setCollisionWarning] = useState(false);
+  const [flashIdx, setFlashIdx] = useState<number | null>(null);
   const [localFeedback, setLocalFeedback] = useState<FurnitureFeedback | null>(props.feedback ?? null);
   const [searchQuery, setSearchQuery] = useState<string | null>(null);
   const [searchResults, setSearchResults] = useState<SearchData | null>(null);
@@ -1412,7 +1413,8 @@ function FloorPlanSVG({
                     });
                     if (collision || doorCollision) {
                       setCollisionWarning(true);
-                      setTimeout(() => setCollisionWarning(false), 1800);
+                      setFlashIdx(i);
+                      setTimeout(() => { setCollisionWarning(false); setFlashIdx(null); }, 1000);
                       return;
                     }
                     setItems((prev) =>
@@ -1442,7 +1444,7 @@ function FloorPlanSVG({
                       } as never);
                     }, 3000);
                   }}
-                  style={{ background: fill, border: `2px solid ${stroke}`, borderRadius: 3, cursor: "grab", zIndex: item.collidable === false ? 1 : 2 }}
+                  style={{ background: flashIdx === i ? "#ef4444" : fill, border: `2px solid ${flashIdx === i ? "#991b1b" : stroke}`, borderRadius: 3, cursor: "grab", zIndex: item.collidable === false ? 1 : 2, transition: "background 0.15s" }}
                 >
                   <div style={{ width: "100%", height: "100%", position: "relative", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
                     <span style={{ fontSize, color: stroke, fontWeight: 600, pointerEvents: "none", textAlign: "center", lineHeight: 1.2 }}>
