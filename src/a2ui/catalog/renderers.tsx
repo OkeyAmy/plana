@@ -1069,9 +1069,18 @@ type FurnitureFeedback = {
   suggestedFurniture?: FurnitureItem[];
 };
 
-type TextResult = { type: "text"; name: string; url: string; content: string; favicon?: string };
-type ImageResult = { type: "image"; url: string; name?: string };
-type SearchData = { texts: TextResult[]; images: ImageResult[] };
+type FurnitureProduct = {
+  name: string;
+  brand?: string;
+  price?: string;
+  url: string;
+  image_url?: string;
+  style?: string;
+  material?: string;
+  dimensions?: string;
+  description?: string;
+};
+type SearchData = { products: FurnitureProduct[] };
 
 const FURNITURE_COLORS: Record<string, [string, string]> = {
   // bedroom
@@ -1253,9 +1262,9 @@ function FloorPlanSVG({
         body: JSON.stringify({ furnitureType: type }),
       });
       const data = await res.json() as Partial<SearchData>;
-      setSearchResults({ texts: data.texts ?? [], images: data.images ?? [] });
+      setSearchResults({ products: data.products ?? [] });
     } catch {
-      setSearchResults({ texts: [], images: [] });
+      setSearchResults({ products: [] });
     } finally {
       setIsSearching(false);
     }
@@ -1509,40 +1518,40 @@ function FloorPlanSVG({
 
           {!isSearching && searchResults && (
             <>
-              {/* Image strip */}
-              {(searchResults.images ?? []).length > 0 && (
-                <div style={{ display: "flex", gap: 6, overflowX: "auto", marginBottom: 12, paddingBottom: 4 }}>
-                  {(searchResults.images ?? []).slice(0, 6).map((img, k) => (
-                    <img key={k} src={img.url} alt={img.name ?? ""} loading="lazy"
-                      style={{ width: 72, height: 72, objectFit: "cover", borderRadius: 6, flexShrink: 0, border: "1px solid #e5e7eb" }}
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                    />
-                  ))}
-                </div>
-              )}
-
-              {/* Product cards */}
-              {(searchResults.texts ?? []).length === 0 && (
+              {(searchResults.products ?? []).length === 0 && (
                 <p style={{ fontSize: 12, color: "#6b7280", textAlign: "center", marginTop: 16 }}>No results found.</p>
               )}
-              {(searchResults.texts ?? []).map((item, k) => (
-                <div key={k} style={{ marginBottom: 8, padding: "9px 10px", background: "#f9fafb", borderRadius: 8, border: "1px solid #e5e7eb" }}>
-                  <div style={{ display: "flex", alignItems: "flex-start", gap: 6, marginBottom: 4 }}>
-                    {item.favicon && (
-                      <img src={item.favicon} alt="" width={14} height={14}
-                        style={{ marginTop: 2, flexShrink: 0 }}
-                        onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                      />
+              {(searchResults.products ?? []).map((item, k) => (
+                <div key={k} style={{ marginBottom: 10, borderRadius: 10, border: "1px solid #e5e7eb", overflow: "hidden", background: "#fff" }}>
+                  {item.image_url && (
+                    <img src={item.image_url} alt={item.name} loading="lazy"
+                      style={{ width: "100%", height: 130, objectFit: "cover", display: "block" }}
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                    />
+                  )}
+                  <div style={{ padding: "8px 10px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 6, marginBottom: 3 }}>
+                      <span style={{ fontWeight: 700, fontSize: 12, color: "#111", lineHeight: 1.3 }}>{item.name}</span>
+                      {item.price && (
+                        <span style={{ fontWeight: 700, fontSize: 12, color: "#166534", flexShrink: 0 }}>{item.price}</span>
+                      )}
+                    </div>
+                    {item.brand && (
+                      <span style={{ fontSize: 10, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>{item.brand}</span>
                     )}
-                    <span style={{ fontWeight: 600, fontSize: 12, color: "#111", lineHeight: 1.3 }}>{item.name}</span>
+                    {item.description && (
+                      <p style={{ fontSize: 11, color: "#374151", margin: "4px 0 0 0", lineHeight: 1.4 }}>{item.description}</p>
+                    )}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4, margin: "5px 0" }}>
+                      {item.style && <span style={{ fontSize: 10, padding: "2px 7px", borderRadius: 20, background: "#eff6ff", color: "#1e40af" }}>{item.style}</span>}
+                      {item.material && <span style={{ fontSize: 10, padding: "2px 7px", borderRadius: 20, background: "#f0fdf4", color: "#166534" }}>{item.material}</span>}
+                      {item.dimensions && <span style={{ fontSize: 10, padding: "2px 7px", borderRadius: 20, background: "#f9fafb", color: "#374151" }}>{item.dimensions}</span>}
+                    </div>
+                    <a href={item.url} target="_blank" rel="noopener noreferrer"
+                      style={{ display: "inline-block", marginTop: 2, fontSize: 11, color: "#1e40af", fontWeight: 600, textDecoration: "none" }}>
+                      View product →
+                    </a>
                   </div>
-                  <p style={{ fontSize: 11, color: "#6b7280", margin: "0 0 6px 0", lineHeight: 1.4 }}>
-                    {item.content?.slice(0, 130)}{item.content && item.content.length > 130 ? "…" : ""}
-                  </p>
-                  <a href={item.url} target="_blank" rel="noopener noreferrer"
-                    style={{ fontSize: 11, color: "#1e40af", fontWeight: 600, textDecoration: "none" }}>
-                    View →
-                  </a>
                 </div>
               ))}
             </>
