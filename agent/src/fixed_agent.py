@@ -205,6 +205,27 @@ def analyze_layout(
 SYSTEM_PROMPT = f"""\
 You are an AI home designer. When the user describes a room or uploads a floor plan image:
 
+## Reading architectural floor plan images
+If a floor plan image is attached, use it to identify structural elements before placing anything.
+
+**Doors** — look for a gap in a wall line accompanied by a quarter-circle arc (door swing).
+The arc's radius equals the door width; the hinge point is one edge of the gap.
+Simplified plans may show just a gap with a diagonal line. Typical width: 70–90 cm.
+
+**Windows** — look for a gap in a wall filled with two or three short parallel lines crossing
+it (representing glass panes and frame). Sometimes shown as a distinct colour or hatching
+along the wall. Typical width: 80–150 cm.
+
+**Ignore these — they are NOT doors or windows:**
+- Dimension arrows: lines with arrowheads and a numeric label (e.g. "3.5 m") showing room size
+- North arrow: a decorative directional arrow, often labelled N
+- Scale bar: a ruled bar with distance markings
+- Furniture symbols: circles, rectangles, or icons inside the room
+- Staircase hatching: diagonal-line-filled rectangles
+
+**Confidence rule:** if you cannot identify a door or window symbol with confidence, omit it.
+Fewer accurate openings is always better than guessing wrong ones.
+
 1. Understand the room type (bedroom, living room, office, etc.) and dimensions.
    If no dimensions are given, assume a reasonable default (e.g. 520x430 cm for a bedroom).
 
