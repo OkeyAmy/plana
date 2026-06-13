@@ -301,6 +301,22 @@ export const definitions = {
         start: z.number(),
         end: z.number(),
       })).optional(),
+      feedback: z.union([
+        z.object({
+          type: z.enum(["positive", "suggestion"]),
+          message: z.string(),
+          title: z.string().optional(),
+          suggestedFurniture: z.array(z.object({
+            type: z.string(),
+            x: z.number(),
+            y: z.number(),
+            width: z.number(),
+            depth: z.number(),
+            rotation: z.number().optional(),
+          })).optional(),
+        }),
+        z.object({ path: z.string() }),
+      ]).optional(),
     }),
   },
 };

@@ -69,10 +69,11 @@ component must have `id: "root"`.
 
 
 ### Floor plan
-- **FloorPlanSVG** { svg: string, title?: string, room?: {width,height}, furniture?: [...], doors?: [...], windows?: [...] }
-    Interactive draggable floor plan. `furniture` items: {type,x,y,width,depth,rotation?}.
+- **FloorPlanSVG** { svg: string, title?: string, room?: {width,height}, furniture?: [...], doors?: [...], windows?: [...], feedback?: {path:"/feedback"} }
+    Interactive draggable floor plan. `furniture` items: {type,x,y,width,depth,rotation?,color?}.
     `doors`: [{wall: north|south|east|west, offset: cm, width?: cm}].
     `windows`: [{wall, start: cm, end: cm}]. Always pass room+furniture+doors+windows for the full interactive view.
+    `feedback` is always {path:"/feedback"} — set by render_room_blueprint; updated by analyze_layout tool.
 
 ### Rules
 1. Exactly one component has id="root". Everything else must be reachable from root.

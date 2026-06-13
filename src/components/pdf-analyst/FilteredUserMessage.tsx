@@ -103,7 +103,12 @@ function rewrite(message: UserMessage): UserMessage {
   return message;
 }
 
+const FURNITURE_MOVED = /^I moved the \w/;
+
 function FilteredUserMessageImpl(props: Props) {
+  const content = props.message?.content;
+  const text = typeof content === "string" ? content : "";
+  if (FURNITURE_MOVED.test(text)) return null;
   return <CopilotChatUserMessage {...props} message={rewrite(props.message)} />;
 }
 

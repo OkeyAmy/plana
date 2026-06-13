@@ -159,8 +159,45 @@ def render_room_blueprint(
                     "furniture": furniture,
                     "doors": doors,
                     "windows": windows,
+                    "feedback": {"path": "/feedback"},
                 }],
             ),
+            a2ui.update_data_model(SURFACE, None, "/feedback"),
+        ]
+    )
+
+
+@tool
+def analyze_layout(
+    feedback_type: str,
+    feedback_title: str,
+    feedback_message: str,
+    suggested_furniture: list[dict] | None = None,
+) -> str:
+    """Analyse a furniture move and push a feedback popup to the floor plan.
+
+    Uses /feedback in the data model — do NOT re-supply room dimensions or
+    the full furniture list.
+
+    Args:
+        feedback_type: "positive" if the move improved the layout,
+                       "suggestion" if a better arrangement exists.
+        feedback_title: Short popup title (max 6 words).
+        feedback_message: 1-2 sentence explanation.
+        suggested_furniture: Improved positions for 1-3 pieces only
+                             (required when feedback_type is "suggestion").
+                             Format: [{"type", "x", "y", "width", "depth", "rotation"}]
+    """
+    feedback: dict = {
+        "type": feedback_type,
+        "title": feedback_title,
+        "message": feedback_message,
+    }
+    if suggested_furniture:
+        feedback["suggestedFurniture"] = suggested_furniture
+    return a2ui.render(
+        operations=[
+            a2ui.update_data_model(SURFACE, feedback, "/feedback"),
         ]
     )
 
@@ -204,6 +241,26 @@ You are an AI home designer. When the user describes a room or uploads a floor p
 
 After rendering, offer one brief suggestion for improvement.
 
+## When the user moves furniture
+
+If the user sends a message starting with "I moved the …", call analyze_layout ONCE.
+Do NOT call render_room_blueprint again. Only provide: feedback_type, feedback_title,
+feedback_message, and optionally suggested_furniture (1-3 pieces max).
+
+Evaluate using:
+- Walkway clearance: minimum 80 cm between items and walls
+- Traffic flow: south wall (door area) must stay clear
+- Ergonomics: desk near east/west wall for light; bed away from door
+- Zone logic: sleeping / working / relaxing zones should not collide
+
+Choose feedback_type:
+- "positive" — move is fine or an improvement.
+- "suggestion" — clearly better placement exists; include suggested_furniture with only
+  the 1-3 pieces that should move (use positions from the "Current layout:" JSON).
+
+Keep feedback_title ≤ 6 words. Keep feedback_message ≤ 2 sentences.
+After calling analyze_layout, output NO additional text — the popup IS the response.
+
 {CATALOG_PROMPT}
 """
 
@@ -222,7 +279,7 @@ def build_fixed_agent():
 
     return create_agent(
         model=_build_model(),
-        tools=[render_room_blueprint],
+        tools=[render_room_blueprint, analyze_layout],
         middleware=[CopilotKitMiddleware()],
         system_prompt=SYSTEM_PROMPT,
         checkpointer=MemorySaver(),

@@ -1062,6 +1062,12 @@ type FurnitureItem = {
 };
 type Door = { wall: "north" | "south" | "east" | "west"; offset: number; width?: number };
 type WinDef = { wall: "north" | "south" | "east" | "west"; start: number; end: number };
+type FurnitureFeedback = {
+  type: "positive" | "suggestion";
+  message: string;
+  title?: string;
+  suggestedFurniture?: FurnitureItem[];
+};
 
 const FURNITURE_COLORS: Record<string, [string, string]> = {
   // bedroom
@@ -1166,6 +1172,7 @@ function WindowFeature({ win, scale, canvasW, canvasH }: { win: WinDef; scale: n
 
 function FloorPlanSVG({
   props,
+  dispatch,
 }: RendererProps<{
   svg: string;
   title?: string;
@@ -1173,13 +1180,16 @@ function FloorPlanSVG({
   furniture?: FurnitureItem[];
   doors?: Door[];
   windows?: WinDef[];
+  feedback?: FurnitureFeedback;
 }>) {
   const [items, setItems] = useState<FurnitureItem[]>(props.furniture ?? []);
   const [collisionWarning, setCollisionWarning] = useState(false);
+  const [localFeedback, setLocalFeedback] = useState<FurnitureFeedback | null>(props.feedback ?? null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const itemsRef = useRef(items);
+  itemsRef.current = items;
 
-  // Bug fix: useState only captures the initial prop value on mount.
-  // When the agent re-calls render_room_blueprint, A2UI updates props on
-  // the existing component instance — items state never changes without this.
   // Smart merge: keep user-dragged positions for items that already exist,
   // place truly new items at the agent's suggested coordinates.
   const prevFurnitureRef = useRef(props.furniture);
@@ -1202,6 +1212,17 @@ function FloorPlanSVG({
       });
     });
   });
+
+  // Sync feedback from data model when agent calls update_data_model
+  useEffect(() => {
+    if (props.feedback) {
+      setLocalFeedback(props.feedback);
+      setIsAnalyzing(false);
+    }
+  }, [props.feedback]);
+
+  // Cleanup debounce on unmount
+  useEffect(() => () => { if (debounceRef.current) clearTimeout(debounceRef.current); }, []);
 
   const hasDraggable = props.furniture && props.furniture.length > 0 && props.room;
 
@@ -1244,6 +1265,30 @@ function FloorPlanSVG({
         <div>
           {/* Canvas */}
           <div style={{ position: "relative", width: canvasW, height: canvasH }}>
+
+            {/* Ghost overlay — suggested positions (dashed outlines, pointer-events: none) */}
+            {localFeedback?.type === "suggestion" && (localFeedback.suggestedFurniture ?? []).map((suggItem, si) => {
+              const isRotated = suggItem.rotation === 90 || suggItem.rotation === 270;
+              const effW = isRotated ? suggItem.depth : suggItem.width;
+              const effH = isRotated ? suggItem.width : suggItem.depth;
+              const [, stroke] = FURNITURE_COLORS[suggItem.type] ?? ["#e5e7eb", "#374151"];
+              return (
+                <div key={`ghost-${si}`} style={{
+                  position: "absolute",
+                  left: Math.round((suggItem.x - effW / 2) * scale),
+                  top: Math.round((suggItem.y - effH / 2) * scale),
+                  width: Math.round(effW * scale),
+                  height: Math.round(effH * scale),
+                  border: `2px dashed ${stroke}`, borderRadius: 3,
+                  opacity: 0.45, pointerEvents: "none", zIndex: 5,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <span style={{ fontSize: 9, color: stroke, fontWeight: 600, opacity: 0.8 }}>
+                    {suggItem.type.replace("_", " ")}
+                  </span>
+                </div>
+              );
+            })}
 
             {/* Collision warning */}
             {collisionWarning && (
@@ -1319,6 +1364,25 @@ function FloorPlanSVG({
                           : it,
                       ),
                     );
+                    // Debounce: wait 3s after last drag then ask agent to analyse
+                    if (debounceRef.current) clearTimeout(debounceRef.current);
+                    debounceRef.current = setTimeout(() => {
+                      if (!dispatch || !props.room) return;
+                      setIsAnalyzing(true);
+                      setLocalFeedback(null);
+                      dispatch({
+                        event: {
+                          name: "furniture_moved",
+                          context: {
+                            label: item.type,
+                            title: props.title ?? "Room Layout",
+                            movedItem: { type: item.type, fromX: item.x, fromY: item.y, toX: sx / scale + effectiveW / 2, toY: sy / scale + effectiveH / 2 },
+                            furniture: itemsRef.current,
+                            room: props.room,
+                          },
+                        },
+                      } as never);
+                    }, 3000);
                   }}
                   style={{ background: fill, border: `2px solid ${stroke}`, borderRadius: 3, cursor: "grab", zIndex: 2 }}
                 >
@@ -1364,6 +1428,63 @@ function FloorPlanSVG({
           </div>
         </div>
       </div>
+
+      {/* Analysing indicator */}
+      {isAnalyzing && !localFeedback && (
+        <div style={{ marginTop: 10, padding: "10px 14px", borderRadius: 10, background: "#f9fafb", border: "1.5px solid #e5e7eb", display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 12, color: "#6b7280" }}>🔍 Analysing layout…</span>
+        </div>
+      )}
+
+      {/* Feedback popup */}
+      {localFeedback && (
+        <div style={{
+          marginTop: 10, padding: "12px 14px", borderRadius: 10,
+          background: localFeedback.type === "positive" ? "#f0fdf4" : "#eff6ff",
+          border: `1.5px solid ${localFeedback.type === "positive" ? "#86efac" : "#93c5fd"}`,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+            <div style={{ flex: 1 }}>
+              {localFeedback.title && (
+                <p style={{ fontWeight: 700, fontSize: 13, margin: "0 0 4px 0", color: localFeedback.type === "positive" ? "#166534" : "#1e40af" }}>
+                  {localFeedback.type === "positive" ? "✓ " : "💡 "}{localFeedback.title}
+                </p>
+              )}
+              <p style={{ fontSize: 12, color: "#374151", lineHeight: 1.5, margin: 0 }}>
+                {localFeedback.message}
+              </p>
+            </div>
+            <button type="button" onClick={() => setLocalFeedback(null)}
+              style={{ background: "none", border: "none", cursor: "pointer", color: "#9ca3af", fontSize: 18, padding: "0 0 0 8px", lineHeight: 1, flexShrink: 0 }}>
+              ×
+            </button>
+          </div>
+          {localFeedback.type === "suggestion" && localFeedback.suggestedFurniture && (
+            <div style={{ display: "flex", gap: 8, marginTop: 10, justifyContent: "flex-end" }}>
+              <button type="button" onClick={() => setLocalFeedback(null)}
+                style={{ padding: "5px 12px", borderRadius: 6, border: "1px solid #d1d5db", background: "white", cursor: "pointer", fontSize: 12, color: "#6b7280" }}>
+                Dismiss
+              </button>
+              <button type="button"
+                onClick={() => {
+                  setItems((prev) => {
+                    const updated = prev.map(it => ({ ...it }));
+                    for (const sugg of localFeedback.suggestedFurniture!) {
+                      const idx = updated.findIndex(it => it.type === sugg.type);
+                      if (idx !== -1) updated[idx] = { ...updated[idx], x: sugg.x, y: sugg.y, rotation: sugg.rotation ?? updated[idx].rotation };
+                    }
+                    return updated;
+                  });
+                  setLocalFeedback(null);
+                }}
+                style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: "#1e40af", cursor: "pointer", fontSize: 12, color: "white", fontWeight: 600 }}>
+                Apply suggestion
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

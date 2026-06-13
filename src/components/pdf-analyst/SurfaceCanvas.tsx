@@ -46,7 +46,15 @@ export function SurfaceCanvas({
         //    A2UI middleware can inject the log_a2ui_event tool result.
         const ua = message?.userAction;
         const labelHint = readContextLabel(ua?.context);
-        if (ua?.name) {
+        if (ua?.name === "furniture_moved") {
+          const ctx = ua.context as Record<string, unknown> | undefined;
+          const movedType = (ctx?.movedItem as Record<string, unknown> | undefined)?.type as string ?? "piece";
+          agent.addMessage({
+            id: crypto.randomUUID(),
+            role: "user",
+            content: `I moved the ${movedType}. Please analyse the new layout and give brief feedback. Current layout: ${JSON.stringify(ctx?.furniture ?? [])}. Room dimensions: ${JSON.stringify(ctx?.room ?? {})}. Title: ${String(ctx?.title ?? "Room Layout")}.`,
+          });
+        } else if (ua?.name) {
           agent.addMessage({
             id: crypto.randomUUID(),
             role: "user",
