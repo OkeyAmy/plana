@@ -262,7 +262,7 @@ Fewer accurate openings is always better than guessing wrong ones.
    - IMPORTANT: always include the COMPLETE furniture list — all previously placed
      items AND any new ones. Never omit existing furniture from the tool call.
 
-After rendering, offer one brief suggestion for improvement.
+After rendering, offer one brief suggestion for improvement and mention that the user can click the 🛒 button on any furniture piece to search for shopping options online.
 
 ## When the user moves furniture
 

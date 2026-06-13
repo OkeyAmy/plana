@@ -1069,6 +1069,10 @@ type FurnitureFeedback = {
   suggestedFurniture?: FurnitureItem[];
 };
 
+type TextResult = { type: "text"; name: string; url: string; content: string; favicon?: string };
+type ImageResult = { type: "image"; url: string; name?: string };
+type SearchData = { texts: TextResult[]; images: ImageResult[] };
+
 const FURNITURE_COLORS: Record<string, [string, string]> = {
   // bedroom
   bed:             ["#a3bffa", "#1e40af"],
@@ -1196,6 +1200,9 @@ function FloorPlanSVG({
   const [items, setItems] = useState<FurnitureItem[]>(props.furniture ?? []);
   const [collisionWarning, setCollisionWarning] = useState(false);
   const [localFeedback, setLocalFeedback] = useState<FurnitureFeedback | null>(props.feedback ?? null);
+  const [searchQuery, setSearchQuery] = useState<string | null>(null);
+  const [searchResults, setSearchResults] = useState<SearchData | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const itemsRef = useRef(items);
@@ -1235,6 +1242,25 @@ function FloorPlanSVG({
   // Cleanup debounce on unmount
   useEffect(() => () => { if (debounceRef.current) clearTimeout(debounceRef.current); }, []);
 
+  const handleSearch = async (type: string) => {
+    setSearchQuery(type);
+    setIsSearching(true);
+    setSearchResults(null);
+    try {
+      const res = await fetch("/api/search-furniture", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ furnitureType: type }),
+      });
+      const data = await res.json() as SearchData;
+      setSearchResults(data);
+    } catch {
+      setSearchResults({ texts: [], images: [] });
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
   const hasDraggable = props.furniture && props.furniture.length > 0 && props.room;
 
   if (!hasDraggable) {
@@ -1259,9 +1285,12 @@ function FloorPlanSVG({
       {props.title && (
         <p style={{ color: "var(--text-primary)", fontWeight: 600, marginBottom: 10, fontSize: 15 }}>
           {props.title}
-          <span style={{ fontWeight: 400, fontSize: 11, color: "var(--text-secondary)", marginLeft: 8 }}>drag · ↻ rotate</span>
+          <span style={{ fontWeight: 400, fontSize: 11, color: "var(--text-secondary)", marginLeft: 8 }}>drag · ↻ rotate · 🛒 shop</span>
         </p>
       )}
+
+      {/* Floor plan + search results side by side */}
+      <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
 
       {/* Room with dimension labels */}
       <div style={{ display: "inline-flex", alignItems: "flex-start", gap: 6 }}>
@@ -1431,6 +1460,21 @@ function FloorPlanSVG({
                     >
                       ↻
                     </button>
+                    {/* Shop button */}
+                    <button
+                      onMouseDown={(e) => e.stopPropagation()}
+                      onClick={(e) => { e.stopPropagation(); void handleSearch(item.type); }}
+                      title={`Shop ${item.type.replace(/_/g, " ")}`}
+                      style={{
+                        position: "absolute", top: 2, left: 2,
+                        width: 16, height: 16, borderRadius: "50%",
+                        border: `1px solid ${stroke}`, background: "rgba(255,255,255,0.75)",
+                        cursor: "pointer", fontSize: 9, padding: 0, lineHeight: 1,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                      }}
+                    >
+                      🛒
+                    </button>
                   </div>
                 </Rnd>
               );
@@ -1443,6 +1487,70 @@ function FloorPlanSVG({
           </div>
         </div>
       </div>
+
+      {/* Search results panel — right of floor plan */}
+      {(isSearching || searchQuery) && (
+        <div style={{ width: 270, flexShrink: 0, maxHeight: canvasH + 40, overflowY: "auto", borderRadius: 10, border: "1px solid #e5e7eb", background: "#fff", padding: 12 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+            <span style={{ fontWeight: 700, fontSize: 13, color: "#111" }}>
+              🛒 {(searchQuery ?? "").replace(/_/g, " ")}
+            </span>
+            <button type="button" onClick={() => { setSearchQuery(null); setSearchResults(null); }}
+              style={{ background: "none", border: "none", cursor: "pointer", color: "#9ca3af", fontSize: 16, lineHeight: 1 }}>×</button>
+          </div>
+
+          {isSearching && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {[1,2,3].map(k => (
+                <div key={k} style={{ height: 72, borderRadius: 8, background: "#f3f4f6", animation: "pulse 1.5s infinite" }} />
+              ))}
+            </div>
+          )}
+
+          {!isSearching && searchResults && (
+            <>
+              {/* Image strip */}
+              {searchResults.images.length > 0 && (
+                <div style={{ display: "flex", gap: 6, overflowX: "auto", marginBottom: 12, paddingBottom: 4 }}>
+                  {searchResults.images.slice(0, 6).map((img, k) => (
+                    <img key={k} src={img.url} alt={img.name ?? ""} loading="lazy"
+                      style={{ width: 72, height: 72, objectFit: "cover", borderRadius: 6, flexShrink: 0, border: "1px solid #e5e7eb" }}
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Product cards */}
+              {searchResults.texts.length === 0 && (
+                <p style={{ fontSize: 12, color: "#6b7280", textAlign: "center", marginTop: 16 }}>No results found.</p>
+              )}
+              {searchResults.texts.map((item, k) => (
+                <div key={k} style={{ marginBottom: 8, padding: "9px 10px", background: "#f9fafb", borderRadius: 8, border: "1px solid #e5e7eb" }}>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: 6, marginBottom: 4 }}>
+                    {item.favicon && (
+                      <img src={item.favicon} alt="" width={14} height={14}
+                        style={{ marginTop: 2, flexShrink: 0 }}
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                      />
+                    )}
+                    <span style={{ fontWeight: 600, fontSize: 12, color: "#111", lineHeight: 1.3 }}>{item.name}</span>
+                  </div>
+                  <p style={{ fontSize: 11, color: "#6b7280", margin: "0 0 6px 0", lineHeight: 1.4 }}>
+                    {item.content?.slice(0, 130)}{item.content && item.content.length > 130 ? "…" : ""}
+                  </p>
+                  <a href={item.url} target="_blank" rel="noopener noreferrer"
+                    style={{ fontSize: 11, color: "#1e40af", fontWeight: 600, textDecoration: "none" }}>
+                    View →
+                  </a>
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+      )}
+
+      </div>{/* end flex row */}
 
       {/* Analysing indicator */}
       {isAnalyzing && !localFeedback && (
