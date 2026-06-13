@@ -1075,6 +1075,15 @@ const FURNITURE_COLORS: Record<string, [string, string]> = {
 
 const SNAP_PX = 14;
 
+function boxesOverlap(
+  ax: number, ay: number, aw: number, ah: number,
+  bx: number, by: number, bw: number, bh: number,
+  gap = 2,
+): boolean {
+  return ax < bx + bw - gap && ax + aw > bx + gap &&
+         ay < by + bh - gap && ay + ah > by + gap;
+}
+
 function DoorFeature({ door, scale, canvasW, canvasH }: { door: Door; scale: number; canvasW: number; canvasH: number }) {
   const dw = (door.width ?? 80) * scale;
   const off = door.offset * scale;
@@ -1207,6 +1216,19 @@ function FloorPlanSVG({
                     if (sy < SNAP_PX) sy = 0;
                     if (sx + w > canvasW - SNAP_PX) sx = canvasW - w;
                     if (sy + h > canvasH - SNAP_PX) sy = canvasH - h;
+                    // collision detection — revert if overlapping any other piece
+                    const collision = items.some((other, idx) => {
+                      if (idx === i) return false;
+                      const oRot = other.rotation === 90 || other.rotation === 270;
+                      const oEW = oRot ? other.depth : other.width;
+                      const oEH = oRot ? other.width : other.depth;
+                      const oW = Math.round(oEW * scale);
+                      const oH = Math.round(oEH * scale);
+                      const oX = Math.round((other.x - oEW / 2) * scale);
+                      const oY = Math.round((other.y - oEH / 2) * scale);
+                      return boxesOverlap(sx, sy, w, h, oX, oY, oW, oH);
+                    });
+                    if (collision) return; // react-rnd reverts to controlled position
                     setItems((prev) =>
                       prev.map((it, idx) =>
                         idx === i
