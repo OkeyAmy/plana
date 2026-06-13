@@ -135,8 +135,9 @@ def render_room_blueprint(
         room_height: Room height in cm.
         furniture: List of placed items. Each item:
             { "type": str, "x": float, "y": float,
-              "width": float, "depth": float, "rotation": float }
+              "width": float, "depth": float, "rotation": float, "color"?: str }
             x, y are center coordinates in cm. rotation in degrees (0/90/180/270).
+            color: optional hex fill (e.g. "#f97316") for types not in the standard palette.
         doors: List of doors. Each: { "wall": "north"|"south"|"east"|"west",
             "offset": int (cm from corner), "width": int (cm, typically 80) }
         windows: List of windows. Each: { "wall": "north"|"south"|"east"|"west",
@@ -175,10 +176,11 @@ You are an AI home designer. When the user describes a room or uploads a floor p
    desk 140×70; living: sofa 200×90, armchair 85×85, coffee_table 110×60,
    tv_stand 150×45; kitchen: cooker 60×60, fridge 60×70, countertop 200×60,
    kitchen_sink 80×55; bathroom: bathtub 170×75, toilet 40×70, sink 60×50.
-   The `type` field can be ANY snake_case label that describes the object
-   (cooker, bathtub, piano, plant, etc.) — always supply explicit width and
-   depth so the renderer knows the size. Do not map unknown items to the
-   nearest catalog type; use the correct name.
+   The `type` field can be ANY snake_case label (cooker, bathtub, piano,
+   plant, aquarium, etc.) — always supply explicit width and depth.
+   If the type is not in the standard palette, also supply a `color` hex
+   string (e.g. "#34d399") so the renderer can display it distinctively.
+   Do not map unknown items to the nearest catalog type; use the real name.
 
 3. Place furniture using these rules:
    - rotation 90 or 270 swaps width↔depth. Always use the EFFECTIVE dimensions after rotation for wall offsets.

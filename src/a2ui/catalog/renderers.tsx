@@ -1058,6 +1058,7 @@ type FurnitureItem = {
   width: number;
   depth: number;
   rotation?: number;
+  color?: string;
 };
 type Door = { wall: "north" | "south" | "east" | "west"; offset: number; width?: number };
 type WinDef = { wall: "north" | "south" | "east" | "west"; start: number; end: number };
@@ -1111,6 +1112,14 @@ function boxesOverlap(
 ): boolean {
   return ax < bx + bw - gap && ax + aw > bx + gap &&
          ay < by + bh - gap && ay + ah > by + gap;
+}
+
+function hexIsDark(hex: string): boolean {
+  const h = hex.replace("#", "").padEnd(6, "0");
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 < 128;
 }
 
 function DoorFeature({ door, scale, canvasW, canvasH }: { door: Door; scale: number; canvasW: number; canvasH: number }) {
@@ -1259,7 +1268,9 @@ function FloorPlanSVG({
 
             {/* Furniture layer */}
             {items.map((item, i) => {
-              const [fill, stroke] = FURNITURE_COLORS[item.type] ?? ["#e5e7eb", "#374151"];
+              const [fill, stroke] = item.color
+                ? [item.color, hexIsDark(item.color) ? "#ffffff" : "#1a1a1a"]
+                : (FURNITURE_COLORS[item.type] ?? ["#e5e7eb", "#374151"]);
               const isRotated = item.rotation === 90 || item.rotation === 270;
               const effectiveW = isRotated ? item.depth : item.width;
               const effectiveH = isRotated ? item.width : item.depth;

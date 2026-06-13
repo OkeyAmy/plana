@@ -289,6 +289,7 @@ export const definitions = {
         width: z.number(),
         depth: z.number(),
         rotation: z.number().optional(),
+        color: z.string().optional(),
       })).optional(),
       doors: z.array(z.object({
         wall: z.enum(["north", "south", "east", "west"]),
