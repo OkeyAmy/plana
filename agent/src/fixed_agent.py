@@ -106,7 +106,14 @@ def render_room_blueprint(
             a2ui.create_surface(SURFACE, catalog_id=CATALOG_ID),
             a2ui.update_components(
                 SURFACE,
-                [{"id": "root", "component": "FloorPlanSVG", "svg": svg, "title": title}],
+                [{
+                    "id": "root",
+                    "component": "FloorPlanSVG",
+                    "svg": svg,
+                    "title": title,
+                    "room": {"width": room_width, "height": room_height},
+                    "furniture": furniture,
+                }],
             ),
         ]
     )
@@ -123,7 +130,9 @@ You are an AI home designer. When the user describes a room or uploads a floor p
    table (120x80), chair (60x60), shelf (100x30), tv_stand (150x45)
 
 3. Place furniture using these rules:
-   - Push items against the nearest wall (x = width/2 + 4, or x = room_width - width/2 - 4)
+   - rotation 90 or 270 swaps width↔depth. Always use the EFFECTIVE dimensions after rotation for wall offsets.
+     e.g. desk (140×70) at rotation=90 → effective width=70, depth=140. West wall: x = 70/2 + 4 = 39
+   - Push items against the nearest wall: x = effective_width/2 + 4 (west) or room_width - effective_width/2 - 4 (east)
    - Leave at least 80 cm of walkway space between items
    - Beds go against the wall opposite the door (usually north)
    - Desks and wardrobes against side walls

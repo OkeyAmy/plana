@@ -7,17 +7,21 @@ import { SurfaceCanvas, CanvasEmptyState } from "@/components/pdf-analyst/Surfac
 import { FilteredUserMessage } from "@/components/pdf-analyst/FilteredUserMessage";
 import { FilteredAssistantMessage } from "@/components/pdf-analyst/FilteredAssistantMessage";
 import { Split } from "@/components/pdf-analyst/Split";
-import { extractPdfText } from "@/lib/pdf";
 
 const AGENT_ID = "fixed_agent";
 
+function toBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve((reader.result as string).split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 export default function FixedPage() {
   const { agent: _agent } = useAgent({ agentId: AGENT_ID });
-  const [loaded, setLoaded] = useState<{
-    filename: string;
-    pages: number;
-    chars: number;
-  } | null>(null);
+  const [loaded, setLoaded] = useState<{ filename: string; size: string } | null>(null);
 
   return (
     <div className="h-screen flex flex-col bg-[var(--bg)]">
@@ -33,13 +37,13 @@ export default function FixedPage() {
               <div className="shrink-0 px-4 py-2 border-b border-[var(--line)] flex items-center gap-2 bg-[color-mix(in_oklab,var(--mint)_8%,var(--surface))]">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0d6b4f]" />
                 <span className="mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--ink)]">
-                  loaded
+                  image loaded
                 </span>
                 <span className="text-[12.5px] font-medium text-[var(--ink)] truncate">
                   {loaded.filename}
                 </span>
                 <span className="text-[11px] text-[var(--ink)] ml-auto">
-                  {loaded.pages} pg · {Math.round(loaded.chars / 1000)}k chars
+                  {loaded.size}
                 </span>
               </div>
             )}
@@ -54,34 +58,29 @@ export default function FixedPage() {
                 }}
                 attachments={{
                   enabled: true,
-                  accept: "application/pdf",
-                  maxSize: 20 * 1024 * 1024,
+                  accept: "image/png,image/jpeg,image/jpg,image/webp",
+                  maxSize: 10 * 1024 * 1024,
                   onUpload: async (file) => {
-                    const { text, pages } = await extractPdfText(file);
+                    const base64 = await toBase64(file);
                     setLoaded({
                       filename: file.name,
-                      pages,
-                      chars: text.length,
+                      size: `${(file.size / 1024).toFixed(0)} KB`,
                     });
                     return {
                       type: "data",
-                      value: text.slice(0, 60_000),
-                      mimeType: "text/plain",
-                      metadata: {
-                        filename: file.name,
-                        pages,
-                        originalMime: "application/pdf",
-                      },
+                      value: base64,
+                      mimeType: file.type,
+                      metadata: { filename: file.name },
                     };
                   },
                   onUploadFailed: (err) =>
-                    console.warn("[pdf upload failed]", err),
+                    console.warn("[image upload failed]", err),
                 }}
                 labels={{
                   chatInputPlaceholder:
-                    "Attach a PDF (📎), then ask to render the dashboard…",
+                    "Upload a floor plan image (📎), or describe your room…",
                   welcomeMessageText:
-                    "Attach a PDF using the 📎 button, then ask: “Render the dashboard.”",
+                    "Upload a floor plan image with 📎, then ask: 'Design this room.' Or just describe your room in text.",
                 }}
               />
             </div>
@@ -93,10 +92,10 @@ export default function FixedPage() {
             emptyState={
               <CanvasEmptyState
                 title="Canvas is empty"
-                subtitle="Attach a PDF in the chat (📎 in the input toolbar) and ask the agent to render the dashboard. The rendered A2UI surface will fill this canvas."
+                subtitle="Upload a floor plan image or describe your room in chat. The AI will generate a furniture layout and render it here."
                 hint={
                   <span className="mono text-[11px] uppercase tracking-[0.14em] text-[var(--ink)]">
-                    try: “Render the dashboard.”
+                    try: "design a minimalist bedroom 500×400cm"
                   </span>
                 }
               />

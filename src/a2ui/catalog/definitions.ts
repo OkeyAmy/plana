@@ -277,10 +277,19 @@ export const definitions = {
 
   FloorPlanSVG: {
     description:
-      "Renders a room floor plan from a raw SVG string. Use whenever the agent has generated a room layout blueprint. Pass the complete SVG markup as `svg`.",
+      "Renders an interactive, draggable room floor plan. Pass `room` dimensions, `furniture` list with center coordinates, and the pre-generated `svg` fallback string.",
     props: z.object({
       svg: z.string(),
       title: z.string().optional(),
+      room: z.object({ width: z.number(), height: z.number() }).optional(),
+      furniture: z.array(z.object({
+        type: z.string(),
+        x: z.number(),
+        y: z.number(),
+        width: z.number(),
+        depth: z.number(),
+        rotation: z.number().optional(),
+      })).optional(),
     }),
   },
 };

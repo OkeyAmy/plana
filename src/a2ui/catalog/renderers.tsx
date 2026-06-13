@@ -1,7 +1,9 @@
 "use client";
 
 import { clsx } from "clsx";
+import { useState } from "react";
 import type { ReactNode } from "react";
+import { Rnd } from "react-rnd";
 import {
   Bar,
   BarChart as RBarChart,
@@ -1049,29 +1051,97 @@ function Slot({ render }: { render: ReactNode }) {
   return <>{render}</>;
 }
 
-function FloorPlanSVG({ props }: RendererProps<{ svg: string; title?: string }>) {
+type FurnitureItem = {
+  type: string;
+  x: number;
+  y: number;
+  width: number;
+  depth: number;
+  rotation?: number;
+};
+
+const FURNITURE_COLORS: Record<string, [string, string]> = {
+  bed:      ["#a3bffa", "#1e40af"],
+  wardrobe: ["#c4b5fd", "#6d28d9"],
+  desk:     ["#6ee7b7", "#065f46"],
+  sofa:     ["#fca5a5", "#991b1b"],
+  table:    ["#fde68a", "#92400e"],
+  chair:    ["#fdba74", "#92400e"],
+  shelf:    ["#d1d5db", "#374151"],
+  tv_stand: ["#a5b4fc", "#3730a3"],
+};
+
+function FloorPlanSVG({
+  props,
+}: RendererProps<{
+  svg: string;
+  title?: string;
+  room?: { width: number; height: number };
+  furniture?: FurnitureItem[];
+}>) {
+  const [items, setItems] = useState<FurnitureItem[]>(props.furniture ?? []);
+
+  const hasDraggable = props.furniture && props.furniture.length > 0 && props.room;
+
+  if (!hasDraggable) {
+    return (
+      <div style={{ background: "var(--card)", borderRadius: "var(--radius-md)", border: "1px solid var(--border-container)", padding: 16 }}>
+        {props.title && <p style={{ color: "var(--text-primary)", fontWeight: 600, marginBottom: 12, fontSize: 15 }}>{props.title}</p>}
+        <div dangerouslySetInnerHTML={{ __html: props.svg }} />
+      </div>
+    );
+  }
+
+  const MAX_W = 560;
+  const MAX_H = 440;
+  const scale = Math.min(MAX_W / props.room!.width, MAX_H / props.room!.height, 1.2);
+  const canvasW = Math.round(props.room!.width * scale);
+  const canvasH = Math.round(props.room!.height * scale);
+
   return (
-    <div
-      style={{
-        background: "var(--card)",
-        borderRadius: "var(--radius-md)",
-        border: "1px solid var(--border-container)",
-        padding: 16,
-      }}
-    >
+    <div style={{ background: "var(--card)", borderRadius: "var(--radius-md)", border: "1px solid var(--border-container)", padding: 16 }}>
       {props.title && (
-        <p
-          style={{
-            color: "var(--text-primary)",
-            fontWeight: 600,
-            marginBottom: 12,
-            fontSize: 15,
-          }}
-        >
+        <p style={{ color: "var(--text-primary)", fontWeight: 600, marginBottom: 12, fontSize: 15 }}>
           {props.title}
+          <span style={{ fontWeight: 400, fontSize: 12, color: "var(--text-secondary)", marginLeft: 8 }}>drag to rearrange</span>
         </p>
       )}
-      <div dangerouslySetInnerHTML={{ __html: props.svg }} />
+      <div style={{ position: "relative", width: canvasW, height: canvasH, background: "#f5f0eb", border: "3px solid #333", borderRadius: 4, overflow: "hidden" }}>
+        {items.map((item, i) => {
+          const [fill, stroke] = FURNITURE_COLORS[item.type] ?? ["#e5e7eb", "#374151"];
+          // rotation 90/270 swaps width↔depth for both box size and center→top-left offset
+          const isRotated = item.rotation === 90 || item.rotation === 270;
+          const effectiveW = isRotated ? item.depth : item.width;
+          const effectiveH = isRotated ? item.width : item.depth;
+          const w = Math.round(effectiveW * scale);
+          const h = Math.round(effectiveH * scale);
+          const x = Math.round((item.x - effectiveW / 2) * scale);
+          const y = Math.round((item.y - effectiveH / 2) * scale);
+          return (
+            <Rnd
+              key={i}
+              position={{ x, y }}
+              size={{ width: w, height: h }}
+              bounds="parent"
+              enableResizing={false}
+              onDragStop={(_e, d) => {
+                setItems((prev) =>
+                  prev.map((it, idx) =>
+                    idx === i
+                      ? { ...it, x: d.x / scale + effectiveW / 2, y: d.y / scale + effectiveH / 2 }
+                      : it,
+                  ),
+                );
+              }}
+              style={{ background: fill, border: `2px solid ${stroke}`, borderRadius: 3, cursor: "grab", display: "flex", alignItems: "center", justifyContent: "center" }}
+            >
+              <span style={{ fontSize: Math.max(9, Math.min(13, w / 6)), color: stroke, fontWeight: 600, pointerEvents: "none", textAlign: "center", lineHeight: 1.2 }}>
+                {item.type.replace("_", " ")}
+              </span>
+            </Rnd>
+          );
+        })}
+      </div>
     </div>
   );
 }
