@@ -1,5 +1,0 @@
-fastapi
-uvicorn[standard]
-ag-ui-protocol
-anthropic
-python-dotenv
