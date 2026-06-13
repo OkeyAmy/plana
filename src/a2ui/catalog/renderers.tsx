@@ -1406,7 +1406,7 @@ function FloorPlanSVG({
                       const oY = Math.round((other.y - oEH / 2) * scale);
                       return boxesOverlap(sx, sy, w, h, oX, oY, oW, oH);
                     });
-                    const doorCollision = doors.some(door => {
+                    const doorCollision = draggable && doors.some(door => {
                       const z = doorBBox(door, scale, canvasW, canvasH);
                       return boxesOverlap(sx, sy, w, h, z.x, z.y, z.w, z.h);
                     });
