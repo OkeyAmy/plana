@@ -1315,7 +1315,7 @@ function FloorPlanSVG({
 
         <div>
           {/* Canvas */}
-          <div style={{ position: "relative", width: canvasW, height: canvasH }}>
+          <div style={{ position: "relative", width: canvasW, height: canvasH, background: "#f5f0eb" }}>
 
             {/* Ghost overlay — suggested positions (dashed outlines, pointer-events: none) */}
             {localFeedback?.type === "suggestion" && (localFeedback.suggestedFurniture ?? []).map((suggItem, si) => {
@@ -1353,10 +1353,9 @@ function FloorPlanSVG({
               </div>
             )}
 
-            {/* SVG layer: background + walls + doors + windows */}
-            <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+            {/* SVG layer: walls + doors + windows — sits above non-collidable items (rugs) */}
+            <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 1 }}
                  viewBox={`0 0 ${canvasW} ${canvasH}`}>
-              <rect x={0} y={0} width={canvasW} height={canvasH} fill="#f5f0eb" />
               <rect x={0} y={0} width={canvasW} height={canvasH} fill="none" stroke="#333" strokeWidth={4} />
               {doors.map((d, i) => <DoorFeature key={i} door={d} scale={scale} canvasW={canvasW} canvasH={canvasH} />)}
               {windows.map((w, i) => <WindowFeature key={i} win={w} scale={scale} canvasW={canvasW} canvasH={canvasH} />)}
@@ -1444,7 +1443,7 @@ function FloorPlanSVG({
                       } as never);
                     }, 3000);
                   }}
-                  style={{ background: flashIdx === i ? "#ef4444" : fill, border: `2px solid ${flashIdx === i ? "#991b1b" : stroke}`, borderRadius: 3, cursor: "grab", zIndex: item.collidable === false ? 1 : 2, transition: "background 0.15s" }}
+                  style={{ background: flashIdx === i ? "#ef4444" : fill, border: `2px solid ${flashIdx === i ? "#991b1b" : stroke}`, borderRadius: 3, cursor: "grab", zIndex: item.collidable === false ? 0 : 2, transition: "background 0.15s" }}
                 >
                   <div style={{ width: "100%", height: "100%", position: "relative", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
                     <span style={{ fontSize, color: stroke, fontWeight: 600, pointerEvents: "none", textAlign: "center", lineHeight: 1.2 }}>
