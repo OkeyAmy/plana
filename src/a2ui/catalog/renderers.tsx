@@ -1,7 +1,7 @@
 "use client";
 
 import { clsx } from "clsx";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 import { Rnd } from "react-rnd";
 import {
@@ -1138,6 +1138,32 @@ function FloorPlanSVG({
 }>) {
   const [items, setItems] = useState<FurnitureItem[]>(props.furniture ?? []);
   const [collisionWarning, setCollisionWarning] = useState(false);
+
+  // Bug fix: useState only captures the initial prop value on mount.
+  // When the agent re-calls render_room_blueprint, A2UI updates props on
+  // the existing component instance — items state never changes without this.
+  // Smart merge: keep user-dragged positions for items that already exist,
+  // place truly new items at the agent's suggested coordinates.
+  const prevFurnitureRef = useRef(props.furniture);
+  useEffect(() => {
+    if (props.furniture === prevFurnitureRef.current) return;
+    prevFurnitureRef.current = props.furniture;
+    if (!props.furniture) return;
+    setItems(prev => {
+      const used = new Set<number>();
+      return props.furniture!.map(newItem => {
+        const matchIdx = prev.findIndex((old, idx) =>
+          !used.has(idx) && old.type === newItem.type,
+        );
+        if (matchIdx >= 0) {
+          used.add(matchIdx);
+          const old = prev[matchIdx];
+          return { ...newItem, x: old.x, y: old.y, rotation: old.rotation ?? newItem.rotation };
+        }
+        return newItem;
+      });
+    });
+  });
 
   const hasDraggable = props.furniture && props.furniture.length > 0 && props.room;
 
