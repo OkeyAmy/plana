@@ -1442,7 +1442,7 @@ function FloorPlanSVG({
                       } as never);
                     }, 3000);
                   }}
-                  style={{ background: fill, border: `2px solid ${stroke}`, borderRadius: 3, cursor: "grab", zIndex: 2 }}
+                  style={{ background: fill, border: `2px solid ${stroke}`, borderRadius: 3, cursor: "grab", zIndex: item.collidable === false ? 1 : 2 }}
                 >
                   <div style={{ width: "100%", height: "100%", position: "relative", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
                     <span style={{ fontSize, color: stroke, fontWeight: 600, pointerEvents: "none", textAlign: "center", lineHeight: 1.2 }}>
