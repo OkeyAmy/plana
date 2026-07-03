@@ -582,9 +582,9 @@ export default function CatalogPage() {
 
   return (
     <>
-      <SiteNav active="catalog" />
+      <SiteNav />
       <PageHeader
-        eyebrow="THE DESIGN SYSTEM"
+        eyebrow="COMPONENT CATALOG"
         meta={
           <span className="pill">
             <span className="dot" /> {EXAMPLES.length} components
@@ -592,11 +592,11 @@ export default function CatalogPage() {
         }
         title={
           <>
-            Every component the agent <br className="hidden md:inline" />
-            <span className="text-[var(--muted)]">is allowed to draw.</span>
+            Plana&rsquo;s A2UI catalog{" "}
+            <span className="text-[var(--muted)]">— the agent&rsquo;s design vocabulary.</span>
           </>
         }
-        subtitle="One catalog, one set of React renderers, one set of brand tokens. Both demos compose from this. The fixed dashboard via a pre-authored layout, the dynamic Q&A by inventing one per question."
+        subtitle="Every component the agent is allowed to compose. One shared catalog, one set of React renderers, one set of brand tokens."
       />
 
       <main className="flex-1 max-w-[1320px] mx-auto px-6 py-8 w-full">
@@ -628,17 +628,8 @@ export default function CatalogPage() {
 
       <footer className="border-t border-[var(--line)] py-6 mt-10">
         <div className="max-w-[1320px] mx-auto px-6 text-xs text-[var(--muted)] flex items-center justify-between">
-          <span>
-            Definitions:{" "}
-            <code className="mono px-1.5 py-0.5 rounded bg-[var(--surface-soft)] border border-[var(--line)] text-[11px]">
-              src/a2ui/catalog/definitions.ts
-            </code>{" "}
-            · Renderers:{" "}
-            <code className="mono px-1.5 py-0.5 rounded bg-[var(--surface-soft)] border border-[var(--line)] text-[11px]">
-              src/a2ui/catalog/renderers.tsx
-            </code>
-          </span>
-          <span className="mono">v0.2</span>
+          <span className="mono">Plana · A2UI v0.9 catalog</span>
+          <span className="mono text-[var(--muted-2)]">v0.2</span>
         </div>
       </footer>
     </>

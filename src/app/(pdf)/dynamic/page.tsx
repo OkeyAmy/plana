@@ -116,9 +116,9 @@ export default function DynamicPage() {
                     console.warn("[pdf upload failed]", err),
                 }}
                 labels={{
-                  chatInputPlaceholder: "Attach a PDF (📎), then ask anything…",
+                  chatInputPlaceholder: "Attach a PDF, then ask anything…",
                   welcomeMessageText:
-                    "Attach a PDF using the 📎 button, then ask any question.",
+                    "Attach a PDF using the clip button, then ask any question about its contents.",
                 }}
               />
             </div>
