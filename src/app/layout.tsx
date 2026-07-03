@@ -42,12 +42,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${jakarta.variable} ${splineMono.variable}`}>
       <head>
-        <title>CopilotKit</title>
-        <link
-          rel="icon"
-          type="image/svg+xml"
-          href="/copilotkit-logo-mark.svg"
-        />
+        <title>Plana — AI Home Designer</title>
+        <meta name="description" content="Describe your room, get a to-scale interactive floor plan. Drag furniture, get live AI feedback." />
       </head>
       <body className={`antialiased`}>
         <ThemeProvider>{children}</ThemeProvider>

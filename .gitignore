@@ -56,3 +56,12 @@ next-env.d.ts
 .claude/local/
 .claude/sessions/
 .claude/worktrees/
+
+# Local tool configs
+.mcp.json
+.vscode/
+.gemini/
+.remember/
+
+# Hackathon agent outputs (agent writes this at runtime)
+# LOOP.md intentionally NOT gitignored — it must be committed

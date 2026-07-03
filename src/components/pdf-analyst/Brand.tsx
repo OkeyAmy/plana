@@ -1,19 +1,19 @@
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// CUSTOMIZATION SEAM #2 — Re-brand the shell
-// See HACKATHON.md §2 for the full recipe.
-//
-// The pdf-analyst chrome: Logo, SiteNav (top nav), PageHeader (landing
-// hero), WorkspaceHeader (the /fixed and /dynamic workspace bar). Swap the
-// logo asset in public/brand/, rename the product, rewrite the hero copy.
-// Brand tints come from src/app/(pdf)/pdf-analyst.css (Seam #1).
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-import Image from "next/image";
 import Link from "next/link";
 
 export function Logo({ size = 22 }: { size?: number }) {
   return (
-    <span style={{ fontSize: size, fontWeight: 700, letterSpacing: "-0.02em", color: "var(--ink)" }}>
-      🏠 AI Home Designer
+    <span
+      style={{
+        fontSize: size,
+        fontWeight: 800,
+        letterSpacing: "-0.04em",
+        background: "var(--brand-gradient)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+      }}
+    >
+      Plana
     </span>
   );
 }
@@ -25,7 +25,7 @@ export function SiteNav({
 }) {
   const links: Array<{ href: string; label: string; key: typeof active }> = [
     { href: "/", label: "Home", key: "home" },
-    { href: "/fixed", label: "Design Room", key: "fixed" },
+    { href: "/fixed", label: "Designer", key: "fixed" },
   ];
   return (
     <header className="shrink-0 border-b border-[var(--line)] bg-[var(--surface)]">
@@ -53,8 +53,6 @@ export function SiteNav({
   );
 }
 
-/** Used only on overview & catalog pages. never on demo pages where the
- *  whole viewport is workspace. Compact, no atmosphere, no gradient. */
 export function PageHeader({
   eyebrow,
   title,
@@ -86,8 +84,6 @@ export function PageHeader({
   );
 }
 
-/** Used by the demo pages. A thin one-row title strip. no hero, no gradient,
- *  no overflow. Sits between the nav and the workspace split. */
 export function WorkspaceHeader({
   eyebrow,
   title,
