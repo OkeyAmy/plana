@@ -9,7 +9,6 @@ RUN npm install --ignore-scripts
 COPY src/ ./src/
 COPY public/ ./public/
 COPY next.config.ts tsconfig.json postcss.config.mjs ./
-COPY showcase.json ./showcase.json
 
 # Plana default swap: no route surgery needed. Both copilotkit routes
 # (src/app/api/copilotkit/[[...slug]]/route.ts for the legal example and
@@ -41,15 +40,8 @@ ENV PATH="/root/.local/bin:$PATH"
 
 WORKDIR /app
 
-# Plana default swap: the agent is now the FastAPI app at
-# agent/main.py (POST /fixed, /dynamic, /legal), served directly with
-# uvicorn — no langgraph-cli, no Docker-in-Docker, no serve.py wrapper. We
-# install from the agent's own pyproject.toml + uv.lock via `uv sync`, which
-# pulls the FROZEN dependency set (langchain-google-genai, ag-ui-langgraph,
-# copilotkit, fastapi, uvicorn, …). The legal example's graph is imported
-# cross-package by agent/main.py, so copy other-examples/ too.
+# Copy the FastAPI agent app.
 COPY agent/ ./agent/
-COPY other-examples/ ./other-examples/
 
 # `uv sync` into the agent's own .venv from the locked manifest. --frozen
 # fails loudly if uv.lock has drifted from pyproject.toml rather than
