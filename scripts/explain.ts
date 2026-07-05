@@ -11,7 +11,7 @@
  *   a2a      → §6 (BYO A2A agent)
  *
  * If HACKATHON.md is missing (e.g. a trimmed fork), prints a friendly
- * message + the topic-to-section mapping so the hacker still gets a pointer.
+ * message + the topic-to-section mapping so the developer still gets a pointer.
  */
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -30,13 +30,13 @@ const TOPIC_TO_SEAM: Record<string, { seam: number; title: string; summary: stri
     seam: 1,
     title: "Re-theme",
     summary:
-      "Edit src/a2ui/theme.css (A2UI surface tokens) + src/app/(pdf)/pdf-analyst.css (shell brand tokens). CSS variables, no rebuild. `pnpm theme:reset` reverts.",
+      "Edit src/a2ui/theme.css (A2UI surface tokens) + src/app/(plana)/plana.css (shell brand tokens). CSS variables, no rebuild. `pnpm theme:reset` reverts.",
   },
   branding: {
     seam: 2,
     title: "Re-brand the shell",
     summary:
-      "Edit src/components/pdf-analyst/Brand.tsx (Logo, SiteNav, PageHeader, WorkspaceHeader). Swap the asset in public/brand/. Keeps the layout intact.",
+      "Edit src/components/plana/Brand.tsx (Logo, SiteNav, PageHeader, WorkspaceHeader). Swap the asset in public/brand/. Keeps the layout intact.",
   },
   data: {
     seam: 3,

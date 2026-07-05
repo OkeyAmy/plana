@@ -1,7 +1,7 @@
 [project]
 name = "a2a-sample-subagent"
 version = "0.1.0"
-description = "Toy A2A subagent for the A2UI hackathon starter — emits A2UI v0.9 envelopes."
+description = "Toy A2A subagent for the Plana A2A sample — emits A2UI v0.9 envelopes."
 requires-python = ">=3.12"
 dependencies = [
   # A2A Protocol — server side. Pinned to 0.2.x (the API used by the

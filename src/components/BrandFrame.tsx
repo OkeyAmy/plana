@@ -2,10 +2,10 @@
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // LEGACY shell header (PortKit-era) — NOT Seam #2, and not mounted by
-// any live route. The pdf-analyst default demo's chrome (the live Seam
-// #2) is src/components/pdf-analyst/Brand.tsx — see HACKATHON.md §2.
+// any live route. The Plana default demo's chrome (the live Seam
+// #2) is src/components/plana/Brand.tsx — see HACKATHON.md §2.
 // This wrapper is kept for the archived PortKit example; don't wire it
-// into the pdf-analyst pages unless you mean to.
+// into the Plana pages unless you mean to.
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import type { ReactNode } from "react";

@@ -2,7 +2,7 @@
 /**
  * pnpm smoke — Composite gate, the load-bearing CI check.
  *
- * pdf-analyst default swap: the default demo is now the FastAPI agent at
+ * Plana default swap: the default demo is now the FastAPI agent at
  * `agent/main.py` (POST /fixed, /dynamic, /legal on :8123), not the archived
  * PortKit langgraph-cli agent (now under other-examples/portkit/). The
  * langgraph.json graph probe was replaced by a FastAPI endpoint-registration
@@ -16,7 +16,7 @@
  *   3. `pnpm validate-widget` over every JSON in the widget/schema dirs
  *   4. `pnpm test:widgets`              — fixture renderer pass (delegates to validator)
  *   4a. `pnpm test:schemas`             — pytest path-vs-data alignment, SKIPPED when
- *                                         agent/tests/ is absent (pdf-analyst ships no
+ *                                         agent/tests/ is absent (Plana ships no
  *                                         pytest suite at the agent root yet)
  *   5. offline envelope shape check     — validates public/offline-envelopes.json
  *                                         structure if present; SKIPPED when absent
@@ -80,7 +80,7 @@ function shellRun(cmd: string, args: string[], opts: { cwd?: string } = {}): { p
   };
 }
 
-// Widget/schema dirs to validate JSON under, in the pdf-analyst layout. The
+// Widget/schema dirs to validate JSON under, in the Plana layout. The
 // archived PortKit `agent/src/widgets/` dir is gone; the in-repo catalog
 // schemas live at agent/src/a2ui/schemas/ and the legal example keeps its
 // fixtures under its own schemas dir. Missing dirs are skipped.
@@ -106,9 +106,9 @@ function findWidgetJsons(): string[] {
   return out;
 }
 
-// The FastAPI endpoints the pdf-analyst default agent must register. The
+// The FastAPI endpoints the Plana default agent must register. The
 // endpoint probe (below) imports agent/main.py and asserts each of these
-// resolves to a registered route. /fixed + /dynamic are the pdf-analyst
+// resolves to a registered route. /fixed + /dynamic are the Plana
 // surfaces; /legal is the in-repo legal-contract-review example, registered
 // defensively (main.py logs + skips it if its cross-example import fails).
 const REQUIRED_AGENT_ENDPOINTS = ["/fixed", "/dynamic"];
@@ -190,7 +190,7 @@ const STEPS: Step[] = [
     name: "test:schemas (pytest path-vs-data alignment)",
     run: async () => {
       // `pnpm test:schemas` is `cd agent && uv run python -m pytest tests/`.
-      // The pdf-analyst default agent ships no pytest suite at agent/tests/
+      // The Plana default agent ships no pytest suite at agent/tests/
       // yet (the PortKit schema tests were archived). Skip when the dir is
       // absent so smoke is exit-0 statically; run it the moment a suite lands.
       const testsDir = join(REPO_ROOT, "agent", "tests");
@@ -206,9 +206,9 @@ const STEPS: Step[] = [
   {
     name: "offline envelope shape check (public/offline-envelopes.json)",
     run: async () => {
-      // pdf-analyst default swap: public/offline-envelopes.json was archived
+      // Plana default swap: public/offline-envelopes.json was archived
       // to other-examples/portkit/public/. When absent, skip cleanly. The
-      // shape validation below still runs if a hacker drops a pdf-analyst
+      // shape validation below still runs if a developer drops a Plana
       // offline file back at public/offline-envelopes.json.
       const offlinePath = join(REPO_ROOT, "public", "offline-envelopes.json");
       if (!existsSync(offlinePath)) {
@@ -265,7 +265,7 @@ const STEPS: Step[] = [
           }
         }
         // (PortKit pinned a required "contract-review" surface here; the
-        // pdf-analyst default has no such hard requirement — any non-empty
+        // Plana default has no such hard requirement — any non-empty
         // bySurface map is accepted. Re-add a required-surface assertion here
         // if a future offline file must guarantee a specific surface.)
         console.log(
@@ -281,7 +281,7 @@ const STEPS: Step[] = [
   {
     name: "agent endpoint probe (FastAPI /fixed + /dynamic [+ /legal])",
     run: async () => {
-      // pdf-analyst default swap: the agent is now the FastAPI app at
+      // Plana default swap: the agent is now the FastAPI app at
       // agent/main.py, not a langgraph-cli graph. Assert it imports cleanly
       // and registers the expected endpoints. We boot `python -c "..."`
       // against the agent's .venv so this is a deterministic, OFFLINE-safe

@@ -2,11 +2,11 @@
 /**
  * pnpm doctor — Preflight environment check.
  *
- * Verifies a hacker's machine has everything needed to boot the starter, with
+ * Verifies a developer's machine has everything needed to boot the starter, with
  * ONE actionable hint per failure. Catches ~80% of "doesn't boot on my machine"
  * issues before they reach a mentor.
  *
- * Each check exits with status code, but we run them all so the hacker sees
+ * Each check exits with status code, but we run them all so the developer sees
  * the full picture in one pass.
  *
  * Exit 0 on all pass, 1 if any check failed.

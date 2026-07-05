@@ -1,7 +1,7 @@
 /* Surface paint-in — staggered entrance for the rendered A2UI surface.
  *
  * The frozen one-shot `a2ui.render()` ships the whole component tree in a
- * single op (the canonical other-examples/a2ui-pdf-analyst showcase is
+ * single op (the canonical other-examples/a2ui-Plana showcase is
  * one-shot too), so there is nothing to stream off the wire. Rather than
  * fabricate a fake partial-tree reveal, we render the real, complete, valid
  * surface and let CSS stagger its top-level sections in — a cosmetic
@@ -9,7 +9,7 @@
  * (src/components/example-layout/example-layout.css).
  *
  * Selector: the A2UI renderer wraps every surface in a `.a2ui-surface`
- * container (a stable renderer class — see also the pdf-analyst example).
+ * container (a stable renderer class — see also the Plana example).
  * Its single child is the surface root component (a Column); that root's
  * children are the top-level sections (title, KPI row, timeline, project
  * cards). So `.a2ui-surface > * > *` == the sections, regardless of how many

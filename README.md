@@ -1,104 +1,165 @@
-# Plana — AI Home Designer
+# Plana
 
-An AI-powered floor plan designer built for the **TestSprite Hackathon Season 3** (CLI Launch & Loop Engineering, Jun 30 – Jul 7 2026). Describe your room or upload a floor plan image — Plana generates a pixel-perfect, to-scale interactive layout, lets you drag furniture with real collision detection, and gives live AI layout feedback.
+Plana is an AI interior layout assistant for turning a room description or floor-plan image into an editable, to-scale furniture plan. It combines a Next.js canvas, a Python LangGraph agent, CopilotKit runtime transport, and A2UI surfaces so the AI output is not just text: it becomes an interactive floor plan you can inspect, move, rotate, and refine.
 
-**Live app:** <!-- add your deployed URL here -->  
-**Public repo:** https://github.com/mezberg/ai_home_designer
+The project is built for the **TestSprite Hackathon Season 3** CLI Launch & Loop Engineering track.
 
----
+**Repository:** https://github.com/OkeyAmy/plana
 
-## What it does
+## What Plana Does
 
-1. **Describe or upload a floor plan** — Type your room dimensions and style, or attach an image. The agent reads architectural symbols: door swing arcs, window lines, wall dimensions.
+- Generates room layouts from natural language prompts such as “design a 520 x 430 cm Scandinavian bedroom with a king bed, wardrobe, and desk near the window.”
+- Reads floor-plan images well enough to reason about walls, door swing arcs, windows, dimension labels, and usable circulation zones.
+- Renders a real A2UI floor-plan surface with room dimensions, furniture dimensions, doors, windows, and a generated SVG blueprint.
+- Lets users drag and rotate furniture while preserving layout state in the canvas.
+- Gives AI feedback after furniture moves, including collision, walkway, door-swing, and ergonomic suggestions.
+- Supports offline demo mode for the fixed layout path when an API key is not available.
+- Includes optional Linkup-powered furniture search hooks for shopping suggestions.
 
-2. **AI generates a to-scale interactive floor plan** — Every piece of furniture is placed with real centimetre dimensions. The layout streams into the canvas via A2UI v0.9 declarative envelopes.
+## Architecture
 
-3. **Drag, rotate, and rearrange — with collision detection** — Move furniture freely. Pieces cannot overlap or block door arcs. Rugs and plants layer underneath collidable furniture. Rotate any piece 90° with one click.
+| Layer | Implementation |
+| --- | --- |
+| Web app | Next.js 16, React 19, Tailwind 4 |
+| AI runtime | CopilotKit Runtime v2 with AG-UI HTTP agents |
+| Agent server | FastAPI on port `8123` |
+| Agent graph | LangGraph Python agents |
+| LLM provider | Gemini via `langchain-google-genai` |
+| Generative UI | A2UI v0.9 operations rendered in the Plana canvas |
+| Layout surface | Custom `FloorPlanSVG` catalog component |
+| Verification | TypeScript typecheck, doctor script, smoke tooling |
 
-4. **Get shopping suggestions** — Once the layout is ready, receive style-matched product links for every piece via Linkup web search.
+The frontend talks to `/api/copilotkit-plana`, which proxies two FastAPI agent endpoints:
 
----
+- `/fixed` generates the room blueprint surface.
+- `/dynamic` generates follow-up A2UI surfaces.
 
-## LOOP.md
+## Getting Started
 
-Agent-written iteration log lives at [`LOOP.md`](./LOOP.md). One line per iteration: what was written, what the TestSprite CLI caught, what was fixed.
+### Requirements
 
----
+- Node.js 20+
+- pnpm 10+
+- Python 3.12+
+- `uv`
+- Gemini API key from https://aistudio.google.com/apikey
 
-## Tech stack
-
-| Layer | Technology |
-|---|---|
-| Frontend | Next.js 16 · React 19 · Tailwind 4 |
-| Generative UI | A2UI v0.9 — `createSurface` / `updateComponents` / `updateDataModel` |
-| Agent–UI transport | AG-UI via `@ag-ui/client` HttpAgent |
-| CopilotKit runtime | `@copilotkit/runtime` + `@copilotkit/react-ui` |
-| Agent framework | LangGraph (Python) + FastAPI (`uvicorn`, port 8123) |
-| LLM | Gemini Flash via `langchain-google-genai` |
-| Drag & resize | `react-rnd` (controlled, position preserved across agent updates) |
-| Shopping search | Linkup structured web search |
-| Verification | TestSprite CLI |
-
----
-
-## Getting started
-
-### Prerequisites
-
-- Node 20+ and pnpm 10+
-- Python 3.12+ and [uv](https://docs.astral.sh/uv/)
-- Gemini API key — [aistudio.google.com/apikey](https://aistudio.google.com/apikey) (free)
-
-### Install and run
+### Install
 
 ```bash
-git clone https://github.com/mezberg/ai_home_designer.git
+git clone https://github.com/OkeyAmy/ai_home_designer.git
 cd ai_home_designer
-
 pnpm install
-
-cp .env.example .env
-# set GEMINI_API_KEY=<your-key>
-# optional: LINKUP_API_KEY=<your-key> for shopping suggestions
-
-pnpm run doctor   # preflight check
-pnpm dev          # Next.js (3000) + FastAPI agent (8123)
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Create your environment file:
 
-### Try it
+```bash
+cp .env.example .env
+```
 
-1. Go to **Designer** (`/fixed`)
-2. Attach a floor plan image and describe your room:
-   > *"My bedroom is ~520×430 cm. Scandinavian feel — king bed, large wardrobe, desk near the window."*
-3. Drag furniture around — the agent comments on your moves
-4. Ask follow-ups: *"Add a reading chair in the corner."* / *"Rotate the wardrobe."*
-5. Click **Find furniture to buy** for shopping links
+Set at least:
 
-No API key? Set `OFFLINE=1` in `.env` for a built-in sample layout.
+```bash
+GEMINI_API_KEY=your_key_here
+```
 
----
+Optional:
 
-## Environment variables
+```bash
+LINKUP_API_KEY=your_key_here
+OFFLINE=1
+```
 
-| Variable | Required | Description |
-|---|---|---|
-| `GEMINI_API_KEY` | Yes (live mode) | Gemini Flash key |
-| `LINKUP_API_KEY` | No | Linkup key for shopping suggestions |
-| `OFFLINE` | No | `1` = serve canned sample layout, no API call |
+`OFFLINE=1` makes the fixed Plana agent return a built-in sample layout without calling Gemini. The dynamic agent still requires a Gemini key.
 
----
+### Run
+
+```bash
+pnpm run doctor
+pnpm dev
+```
+
+Open http://localhost:3000.
+
+## Main Routes
+
+| Route | Purpose |
+| --- | --- |
+| `/` | Plana landing and product overview |
+| `/fixed` | Main room designer workspace |
+| `/dynamic` | Dynamic A2UI follow-up surface workspace |
+| `/catalog` | Plana A2UI component catalog preview |
+| `/api/copilotkit-plana` | CopilotKit runtime route for the Plana agents |
+
+## How To Use It
+
+1. Open `/fixed`.
+2. Describe the room, including dimensions, room type, style, and must-have furniture.
+3. Attach a floor-plan image if available.
+4. Wait for Plana to render the interactive blueprint.
+5. Drag or rotate furniture in the canvas.
+6. Ask Plana to add, remove, resize, or reposition items.
+7. Use the shopping action when you want product options for a furniture piece.
+
+Good prompt example:
+
+```text
+Design a 520 x 430 cm bedroom with a warm minimalist style. Add a queen bed,
+two nightstands, a wardrobe, a desk near the window, a rug, and one plant.
+Keep the south door swing clear and leave an 80 cm walkway.
+```
+
+## Important Files
+
+| Path | Purpose |
+| --- | --- |
+| `agent/src/fixed_agent.py` | Main Plana room-design agent and design-generation prompt |
+| `agent/src/dynamic_agent.py` | Secondary agent for dynamic A2UI surfaces |
+| `agent/main.py` | FastAPI server exposing `/fixed` and `/dynamic` |
+| `src/app/(plana)/fixed/page.tsx` | Main designer route |
+| `src/components/plana/SurfaceCanvas.tsx` | Canvas that renders the A2UI floor-plan surface |
+| `src/a2ui/catalog/` | Frontend A2UI component definitions and renderers |
+| `agent/src/catalog.py` | Python mirror of the A2UI catalog |
+| `src/app/api/copilotkit-plana/route.ts` | Runtime bridge from Next.js to the Plana agents |
 
 ## Scripts
 
-| Command | What it does |
-|---|---|
-| `pnpm dev` | Boot Next.js + FastAPI agent |
-| `pnpm run doctor` | Preflight env check |
-| `pnpm typecheck` | TypeScript type check |
+| Command | Purpose |
+| --- | --- |
+| `pnpm dev` | Run the Next.js app and FastAPI agent together |
+| `pnpm dev:ui` | Run only the Next.js app |
+| `pnpm dev:agent` | Run only the Python agent server |
+| `pnpm run doctor` | Check local setup and required environment |
+| `pnpm typecheck` | Run TypeScript validation |
+| `pnpm smoke` | Run the repo smoke checks |
+| `pnpm validate-widget <path>` | Validate A2UI widget fixture shape |
 
----
+## Environment Variables
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `GEMINI_API_KEY` | Yes for live AI | Gemini key used by the Plana agents |
+| `MODEL` | No | Override the default Gemini model |
+| `FIXED_AGENT_URL` | No | Defaults to `http://localhost:8123/fixed` |
+| `DYNAMIC_AGENT_URL` | No | Defaults to `http://localhost:8123/dynamic` |
+| `LINKUP_API_KEY` | No | Enables furniture-shopping search |
+| `OFFLINE` | No | `1` enables the fixed-agent offline sample |
+
+## Verification
+
+Before shipping changes, run:
+
+```bash
+pnpm run doctor
+pnpm typecheck
+```
+
+For broader checks:
+
+```bash
+pnpm smoke
+```
 
 ## License
 

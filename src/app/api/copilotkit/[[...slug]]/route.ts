@@ -9,11 +9,11 @@ import { handle } from "hono/vercel";
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Host (v1) runtime endpoint — serves the legal-contract-review example.
 //
-// The pdf-analyst default at `/` runs on its OWN v2 runtime route
-// (src/app/api/copilotkit-pdf/route.ts) against the FastAPI agents on
+// The Plana default at `/` runs on its OWN v2 runtime route
+// (src/app/api/copilotkit-plana/route.ts) against the FastAPI agents on
 // :8123. This route hosts only the legal example now; the former PortKit
 // `default` agent (graph `sample_agent`, via `LangGraphAgent`) was archived
-// to other-examples/portkit/ during the pdf-analyst default swap.
+// to other-examples/portkit/ during the Plana default swap.
 //
 // The legal agent is an AG-UI HTTP agent served by the same FastAPI process
 // at /legal (see the backend). We talk to it via @ag-ui/client's HttpAgent
@@ -31,11 +31,11 @@ const legalAgent = new HttpAgent({
 // via a `send_message_to_a2a_agent` tool. Comma-separate the env var to
 // point at multiple A2A agents.
 //
-// NOTE: with the pdf-analyst default swap, the former `default` agent this
+// NOTE: with the Plana default swap, the former `default` agent this
 // seam used to wrap was archived. The seam now wraps the `legal` agent so it
 // stays exercised + non-breaking on this host route.
-// TODO(S4): re-home the A2A seam to the default pdf agent on
-// src/app/api/copilotkit-pdf/route.ts once that becomes the primary surface
+// TODO(S4): re-home the A2A seam to the Plana agent on
+// src/app/api/copilotkit-plana/route.ts once that becomes the primary surface
 // for interop demos.
 //
 // BEFORE plugging in a partner agent: run `pnpm check-a2a <url>` to verify it
@@ -62,7 +62,7 @@ const orchestrationAgent =
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           orchestrationAgent: legalAgent as any,
           description:
-            "A2UI hackathon orchestrator with optional A2A subagent delegation",
+            "Plana A2UI orchestrator with optional A2A subagent delegation",
           instructions: process.env.A2A_INSTRUCTIONS,
         });
         return wrapped as unknown as typeof legalAgent;

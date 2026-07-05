@@ -6,7 +6,7 @@
    Scoped to .a2ui-surface and consumed by @copilotkit/a2ui-renderer.
    Every agent-generated surface inherits these tokens. The shell brand
    tokens (the chrome around the chat) live in
-   src/app/(pdf)/pdf-analyst.css. `pnpm theme:reset` reverts both.
+   src/app/(plana)/plana.css. `pnpm theme:reset` reverts both.
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .a2ui-surface {
   --background: #fafafc;

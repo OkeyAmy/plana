@@ -1,14 +1,14 @@
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    LEGACY host token override layer (PortKit-era shell) — NOT Seam #1.
 
-   The live Seam #1 (re-theme) files for the default pdf-analyst demo are:
+   The live Seam #1 (re-theme) files for the default Plana demo are:
      - src/a2ui/theme.css            (A2UI surface tokens, .a2ui-surface)
-     - src/app/(pdf)/pdf-analyst.css (shell brand tokens, .pdf-analyst-root)
+     - src/app/(plana)/plana.css (shell brand tokens, .plana-root)
    See HACKATHON.md §1 for the recipe. `pnpm theme:reset` reverts all three.
 
    This file is imported AFTER globals.css (in src/app/layout.tsx), so any
-   token set here overrides the host `:root` defaults. The pdf-analyst pages
-   scope their own tokens under `.pdf-analyst-root` / `.a2ui-surface`, so
+   token set here overrides the host `:root` defaults. The Plana pages
+   scope their own tokens under `.plana-root` / `.a2ui-surface`, so
    edits here have little visible effect on the default demo — it mainly
    themes the legacy shell components kept alongside the archived PortKit
    example. The values below mirror the canonical CopilotKit defaults, so

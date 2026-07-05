@@ -11,9 +11,9 @@ COPY public/ ./public/
 COPY next.config.ts tsconfig.json postcss.config.mjs ./
 COPY showcase.json ./showcase.json
 
-# pdf-analyst default swap: no route surgery needed. Both copilotkit routes
+# Plana default swap: no route surgery needed. Both copilotkit routes
 # (src/app/api/copilotkit/[[...slug]]/route.ts for the legal example and
-# src/app/api/copilotkit-pdf/route.ts for the pdf default) are already
+# src/app/api/copilotkit-plana/route.ts for Plana) are already
 # AG-UI HttpAgent based and talk to the FastAPI agent on :8123 — see the
 # entrypoint. @ag-ui/client is a normal package.json dependency, so the
 # `npm install` above already provides it; the old docker-route-override.ts
@@ -41,7 +41,7 @@ ENV PATH="/root/.local/bin:$PATH"
 
 WORKDIR /app
 
-# pdf-analyst default swap: the agent is now the FastAPI app at
+# Plana default swap: the agent is now the FastAPI app at
 # agent/main.py (POST /fixed, /dynamic, /legal), served directly with
 # uvicorn — no langgraph-cli, no Docker-in-Docker, no serve.py wrapper. We
 # install from the agent's own pyproject.toml + uv.lock via `uv sync`, which

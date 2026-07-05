@@ -4,7 +4,7 @@
  * `other-examples/<name>/`.
  *
  * Why this exists:
- *   Issue #7 — hackers (and AI agents) trying to add a second example beyond
+ *   Issue #7 — developers (and AI agents) trying to add a second example beyond
  *   `legal-contract-review/` had no template or generator. They had to
  *   hand-author every file from the plan's prose layout. This script produces
  *   a thin scaffold that points at the canonical example as the pattern to copy.
@@ -21,7 +21,7 @@
  *     agent/            # Stub for the LangGraph Python package
  *       README.md
  *
- * The intent is NOT a full working example out of the box. The hacker should
+ * The intent is NOT a full working example out of the box. The developer should
  * `cp -r other-examples/legal-contract-review/* other-examples/<name>/` to fill
  * in the real content. This scaffold is just enough structure to anchor the
  * next set of edits and avoid the "what files do I need" panic.

@@ -2,14 +2,14 @@
  * CUSTOMIZATION SEAM #1 — Re-theme (shell brand tokens)
  * See HACKATHON.md §1 for the full recipe.
  *
- * pdf-analyst segment styles (Stage 1 migration — ADDITIVE, SCOPED).
+ * Plana segment styles (Stage 1 migration — ADDITIVE, SCOPED).
  *
  * The host root layout/globals own the `:root` brand tokens and the
- * --font-body-loader / --font-code-loader font handles. The pdf-analyst
+ * --font-body-loader / --font-code-loader font handles. The Plana
  * pages were authored against a different token vocabulary (--ink, --lilac,
  * --brand-gradient, …) and the --font-plus-jakarta / --font-spline-mono
  * handles. To bring those pages in WITHOUT clobbering host tokens, every
- * token + chrome class below is scoped under `.pdf-analyst-root` (the
+ * token + chrome class below is scoped under `.plana-root` (the
  * wrapper div rendered by this segment's layout.tsx) instead of `:root`.
  *
  * The font CSS variables (--font-plus-jakarta / --font-spline-mono) are set
@@ -19,7 +19,7 @@
  * and the CopilotChat v2 styles are imported by this segment's layout.tsx.
  * ─────────────────────────────────────────────────────────────────────── */
 
-.pdf-analyst-root {
+.plana-root {
   /* Surfaces */
   --bg: #fafafc;
   --bg-alt: #ededf5;
@@ -65,24 +65,24 @@
 }
 
 /* Mono pills, code-like UI labels, button text per brand */
-.pdf-analyst-root .mono {
+.plana-root .mono {
   font-family:
     var(--font-spline-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 /* ── Brand chrome ────────────────────────────────────────────── */
-.pdf-analyst-root .brand-gradient {
+.plana-root .brand-gradient {
   background: var(--brand-gradient);
 }
 /* Ambient kiss-of-color — peripheral, never behind reading content. */
-.pdf-analyst-root .brand-gradient-soft {
+.plana-root .brand-gradient-soft {
   background: var(--brand-gradient);
   opacity: 0.1;
   filter: blur(40px);
 }
 
 /* Subtle dotted texture, faded toward the centre. */
-.pdf-analyst-root .dot-grid {
+.plana-root .dot-grid {
   background-image: radial-gradient(
     circle,
     color-mix(in oklab, var(--ink) 5%, transparent) 1px,
@@ -94,7 +94,7 @@
 }
 
 /* ── Pills (mono per brand) ──────────────────────────────────── */
-.pdf-analyst-root .pill {
+.plana-root .pill {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -109,7 +109,7 @@
   background: var(--surface);
   color: var(--muted);
 }
-.pdf-analyst-root .pill .dot {
+.plana-root .pill .dot {
   width: 6px;
   height: 6px;
   border-radius: 999px;
@@ -118,26 +118,26 @@
 }
 
 /* ── Cards / surfaces ────────────────────────────────────────── */
-.pdf-analyst-root .surface {
+.plana-root .surface {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
 }
-.pdf-analyst-root .surface-soft {
+.plana-root .surface-soft {
   background: var(--surface-soft);
   border: 1px solid var(--line-2);
   border-radius: var(--radius);
 }
 
 /* ── CopilotChat surface fixes (match brand) ─────────────────── */
-.pdf-analyst-root .copilot-chat-wrapper [class*="bg-white"] {
+.plana-root .copilot-chat-wrapper [class*="bg-white"] {
   background: var(--surface) !important;
 }
 
 /* Breathing room around the chat input. CopilotChat wraps the input bar
  * in its `bottomAnchored` container; without padding it sits flush
  * against the panel edges and the rounded border touches the wall. */
-.pdf-analyst-root .copilot-chat-wrapper > div:last-child > :last-child {
+.plana-root .copilot-chat-wrapper > div:last-child > :last-child {
   padding-left: 12px;
   padding-right: 12px;
   padding-bottom: 10px;

@@ -2,7 +2,7 @@
 /**
  * pnpm validate-widget <path> — A2UI v0.9 envelope/schema shape validator.
  *
- * The starter uses ONE canonical fixture shape (issue #16 — three incompatible
+ * The project uses ONE canonical fixture shape (issue #16 — three incompatible
  * fixture shapes used to coexist; we picked the validator's `{components, data}`
  * shape because the validator is the authority). The two non-fixture shapes
  * (bare catalog schemas and the `pnpm new-widget`-style wrapper widget) are
@@ -12,7 +12,7 @@
  * Three recognized JSON shapes:
  *
  *   (a) Bare catalog schema — array of v0.9 components. Canonical example:
- *       `agent/src/a2ui/schemas/dashboard.json` (the pdf-analyst dashboard
+ *       `agent/src/a2ui/schemas/dashboard.json` (the Plana dashboard
  *       surface).
  *
  *         [
@@ -22,7 +22,7 @@
  *
  *   (b) Wrapper widget JSON — what `pnpm new-widget` scaffolds. The schema
  *       array is nested under a `schema` key. No such file ships in the
- *       pdf-analyst default; run `pnpm new-widget <name>` to generate one.
+ *       Plana default; run `pnpm new-widget <name>` to generate one.
  *
  *         {
  *           "id": "my-widget",
@@ -66,20 +66,20 @@
 import { existsSync, readFileSync, statSync, readdirSync } from "node:fs";
 import { join, resolve, basename } from "node:path";
 
-// Canonical references — these are real JSON files in the repo a hacker can
+// Canonical references — these are real JSON files in the repo a developer can
 // open and copy-paste. Issue #17: the validator used to point at a Python
 // file which is not a template you can mirror — these are JSON.
 //
-// pdf-analyst default swap: the former PortKit risk_register.* references
+// Plana default swap: the former PortKit risk_register.* references
 // were archived to other-examples/portkit/. The bare catalog-schema example
-// is now the pdf-analyst dashboard schema, and the canonical fixture +
+// is now the Plana dashboard schema, and the canonical fixture +
 // wrapper-widget example come from the in-repo legal-contract-review example
 // (the closest live `{ surfaceId, catalogId, components, data }` fixture).
 // The catalog itself is defined in TypeScript at src/a2ui/catalog/
 // definitions.ts — see `pnpm new-widget` for the copy-this pattern.
 const CANONICAL_CATALOG_SCHEMA_JSON = "agent/src/a2ui/schemas/dashboard.json";
 // Shape (b) — the schema-under-`schema`-key wrapper widget — is what
-// `pnpm new-widget <name>` scaffolds; no such file ships in the pdf-analyst
+// `pnpm new-widget <name>` scaffolds; no such file ships in the Plana
 // default (the in-repo catalog schemas are bare arrays, shape (a)). Point
 // at the bare catalog schema so the `schema`-array content is still
 // openable, and lean on `pnpm new-widget` for the wrapper envelope itself.
@@ -200,7 +200,7 @@ function validateCatalogId(value: unknown, errors: ValidationError[]): void {
   if (!/^[a-z]+:\/\//.test(value)) {
     errors.push({
       message: `'catalogId' ("${value}") doesn't look like a URI (expected scheme://...).`,
-      fix: `Use a URI-shaped catalogId. The starter uses "copilotkit://app-dashboard-catalog".`,
+      fix: `Use a URI-shaped catalogId. The project uses "copilotkit://app-dashboard-catalog".`,
     });
   }
 }
@@ -247,7 +247,7 @@ function validateWrapperWidget(
  *
  * Issue #16: this is the ONE canonical fixture shape. Files that still use
  * the legacy `envelopes: [...]` shape are migrated to this shape and the
- * legacy branch is rejected on purpose so a hacker reading the error message
+ * legacy branch is rejected on purpose so a developer reading the error message
  * gets pointed at the canonical fixture, not a stale shape.
  */
 function validateCanonicalFixture(
@@ -316,7 +316,7 @@ function pickShape(
     return { kind: "wrapper-widget", canonical: CANONICAL_WIDGET_JSON };
   }
   // Any non-fixture top-level object with surfaceId/components is treated
-  // as if a hacker dropped a fixture in the wrong place — validate it as
+  // as if a developer dropped a fixture in the wrong place — validate it as
   // the canonical fixture shape and let the error messages teach.
   if (Array.isArray(obj.components) || "surfaceId" in obj || Array.isArray(obj.envelopes)) {
     return { kind: "canonical-fixture", canonical: CANONICAL_FIXTURE_JSON };
@@ -364,7 +364,7 @@ function validateFile(filePath: string): boolean {
     case "canonical-fixture":
       shapeLabel = "canonical fixture";
       // Pre-flight: a stale envelopes-array fixture will fail the canonical
-      // checks; teach against the canonical shape directly so the hacker
+      // checks; teach against the canonical shape directly so the developer
       // doesn't have to guess.
       if (
         typeof parsed === "object" &&

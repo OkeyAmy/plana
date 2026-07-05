@@ -113,6 +113,6 @@ if [[ -n "$best" ]]; then
   echo "VERDICT: use $best (highest-priority candidate that passed BOTH single- and multi-turn)."
   echo "Write that ID into agent/main.py, agent/src/a2ui_dynamic_schema.py, .env.example, and FROZEN.md."
 else
-  echo "VERDICT: NO candidate passed multi-turn. The base starter cannot run agentic loops on Gemini today."
+  echo "VERDICT: NO candidate passed multi-turn. The base project cannot run agentic loops on Gemini today."
   echo "Investigate: thought_signature passthrough in langchain-openai, or switch to langchain-google-genai."
 fi

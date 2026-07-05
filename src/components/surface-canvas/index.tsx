@@ -4,9 +4,9 @@ import { useMemo, type ComponentType } from "react";
 import { useAgent, createA2UIMessageRenderer } from "@copilotkit/react-core/v2";
 import { viewerTheme, type Theme } from "@copilotkit/a2ui-renderer";
 // NOTE: the PortKit `demonstrationCatalog` was archived to
-// other-examples/portkit/ during the pdf-analyst default swap. This shell
-// canvas is no longer mounted by any kept route (the pdf default uses
-// @/components/pdf-analyst/SurfaceCanvas), so we repoint to the pdf-analyst
+// other-examples/portkit/ during the Plana default swap. This shell
+// canvas is no longer mounted by any kept route (the Plana default uses
+// @/components/plana/SurfaceCanvas), so we repoint to the Plana
 // catalog purely to keep this file typecheck-valid.
 import { catalog as demonstrationCatalog } from "@/a2ui/catalog";
 import { useLatestSurface } from "@/lib/surface-bus";
@@ -24,7 +24,7 @@ import "./surface-canvas.css";
  *
  * Paint-in: the frozen `copilotkit.a2ui` API emits the whole component tree in
  * one shot (see FROZEN.md) — there is no streaming on the wire, and the
- * canonical upstream showcase (other-examples/a2ui-pdf-analyst) is one-shot
+ * canonical upstream showcase (other-examples/a2ui-Plana) is one-shot
  * too. So rather than fabricate a fake partial-tree reveal, we render the real,
  * complete, valid surface and let CSS stagger its top-level sections in (see
  * surface-canvas.css). Honest about the wire, ~no JS, respects reduced-motion.

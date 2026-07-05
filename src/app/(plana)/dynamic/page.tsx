@@ -7,11 +7,11 @@ import {
   useAgent,
   useRenderTool,
 } from "@copilotkit/react-core/v2";
-import { SiteNav } from "@/components/pdf-analyst/Brand";
-import { SurfaceCanvas, CanvasEmptyState } from "@/components/pdf-analyst/SurfaceCanvas";
-import { FilteredUserMessage } from "@/components/pdf-analyst/FilteredUserMessage";
-import { FilteredAssistantMessage } from "@/components/pdf-analyst/FilteredAssistantMessage";
-import { Split } from "@/components/pdf-analyst/Split";
+import { SiteNav } from "@/components/plana/Brand";
+import { SurfaceCanvas, CanvasEmptyState } from "@/components/plana/SurfaceCanvas";
+import { FilteredUserMessage } from "@/components/plana/FilteredUserMessage";
+import { FilteredAssistantMessage } from "@/components/plana/FilteredAssistantMessage";
+import { Split } from "@/components/plana/Split";
 import { extractPdfText } from "@/lib/pdf";
 
 const AGENT_ID = "dynamic_agent";

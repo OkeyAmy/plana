@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SiteNav, PageHeader } from "@/components/pdf-analyst/Brand";
+import { SiteNav, PageHeader } from "@/components/plana/Brand";
 import {
   A2UIProvider,
   A2UIRenderer,

@@ -37,8 +37,8 @@ const runtime = new CopilotRuntime({
 const handler = createCopilotRuntimeHandler({
   runtime,
   // Isolated from the host's v1 route at /api/copilotkit/[[...slug]].
-  // The pdf-analyst Providers point CopilotKit's runtimeUrl here.
-  basePath: "/api/copilotkit-pdf",
+  // The Plana Providers point CopilotKit's runtimeUrl here.
+  basePath: "/api/copilotkit-plana",
   mode: "single-route",
 });
 

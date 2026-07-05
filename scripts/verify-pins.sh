@@ -11,7 +11,7 @@
 #   - next                      == 16.1.6
 #
 # 2026-05-29: @copilotkit/* bumped 1.56.5 -> 1.57.4 (+ @copilotkit/react-ui
-# added) to host the a2ui-pdf-analyst example. See FROZEN.md.
+# added) to host the a2ui-Plana example. See FROZEN.md.
 #
 # Exit 0 on clean pins, 1 on drift. Machine-parsable: one line per violation
 # prefixed with "DRIFT:".

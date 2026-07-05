@@ -10,7 +10,7 @@
  *
  * Files restored:
  *   src/a2ui/theme.css             ← scripts/theme-baseline/theme.css
- *   src/app/(pdf)/pdf-analyst.css  ← scripts/theme-baseline/pdf-analyst.css
+ *   src/app/(plana)/plana.css  ← scripts/theme-baseline/plana.css
  *   src/lib/a2ui-theme.css         ← scripts/theme-baseline/a2ui-theme.css
  *
  * If something is too broken to fix manually mid-build, `pnpm theme:reset`
@@ -25,7 +25,7 @@ const BASELINE_DIR = join(REPO_ROOT, "scripts", "theme-baseline");
 // [live path, baseline filename]
 const TARGETS: Array<[string, string]> = [
   [join(REPO_ROOT, "src", "a2ui", "theme.css"), "theme.css"],
-  [join(REPO_ROOT, "src", "app", "(pdf)", "pdf-analyst.css"), "pdf-analyst.css"],
+  [join(REPO_ROOT, "src", "app", "(plana)", "plana.css"), "plana.css"],
   [join(REPO_ROOT, "src", "lib", "a2ui-theme.css"), "a2ui-theme.css"],
 ];
 
@@ -80,7 +80,7 @@ function main(): void {
   } else {
     console.log(`${GREEN}${BOLD}Theme reset.${RESET} ${DIM}(${restored} restored, ${clean} already clean)${RESET}`);
     console.log(
-      `${DIM}If the panic button didn't help, check src/components/pdf-analyst/Brand.tsx${RESET}`,
+      `${DIM}If the panic button didn't help, check src/components/plana/Brand.tsx${RESET}`,
     );
     console.log(`${DIM}(Seam #2 — re-brand the shell) and src/app/globals.css.${RESET}`);
   }

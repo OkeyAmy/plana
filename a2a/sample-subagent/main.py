@@ -1,5 +1,5 @@
 """
-Toy A2A subagent for the A2UI hackathon starter.
+Toy A2A subagent for the Plana A2A sample.
 
 This is the minimum thing that satisfies the A2A protocol contract while
 emitting A2UI v0.9 envelopes. A partner agent can use this file as a
@@ -179,7 +179,7 @@ skill = AgentSkill(
 public_agent_card = AgentCard(
     name="A2UI Hackathon Sample A2A Subagent",
     description=(
-        "Toy A2A subagent for the A2UI hackathon starter. Emits a fixed "
+        "Toy A2A subagent for the Plana A2A sample. Emits a fixed "
         "A2UI v0.9 envelope sequence. Use as a template for your own A2A "
         "agent — swap build_a2ui_envelopes() for your domain."
     ),

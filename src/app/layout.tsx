@@ -26,7 +26,7 @@ const splineMono = Spline_Sans_Mono({
  *
  * Intentionally minimal: only `<html>`, `<body>`, and `<ThemeProvider>`. The
  * Copilot provider is mounted per route group (see
- * `src/app/(pdf)/layout.tsx` and `src/app/(legal)/layout.tsx`) so each
+ * `src/app/(plana)/layout.tsx` and `src/app/(legal)/layout.tsx`) so each
  * group can carry its own agent + A2UI catalog without double-mounting the
  * provider.
  *
@@ -42,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${jakarta.variable} ${splineMono.variable}`}>
       <head>
-        <title>Plana — AI Home Designer</title>
+        <title>Plana</title>
         <meta name="description" content="Describe your room, get a to-scale interactive floor plan. Drag furniture, get live AI feedback." />
       </head>
       <body className={`antialiased`}>

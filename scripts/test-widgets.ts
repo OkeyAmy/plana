@@ -4,9 +4,9 @@
  * stage of the starter) against every *.fixture.json in the repo's widget /
  * schema directories.
  *
- * pdf-analyst default swap: the former root PortKit fixtures at
+ * Plana default swap: the former root PortKit fixtures at
  * `agent/src/widgets/` were archived to other-examples/portkit/. The
- * pdf-analyst default ships its catalog in TypeScript (src/a2ui/catalog/)
+ * Plana default ships its catalog in TypeScript (src/a2ui/catalog/)
  * and keeps its in-repo example fixtures under the example's own schemas
  * dir. This script scans every WIDGET_DIR below and validates whatever
  * `*.fixture.json` it finds. If a dir is absent, it's silently skipped.
@@ -27,10 +27,10 @@ import { spawnSync } from "node:child_process";
 const REPO_ROOT = join(__dirname, "..");
 
 // Directories that may hold canonical *.fixture.json files in the
-// pdf-analyst layout. Order is informational only. Missing dirs are skipped.
+// Plana layout. Order is informational only. Missing dirs are skipped.
 const WIDGET_DIRS = [
-  // Root agent schemas (pdf-analyst). Bare catalog schemas live here today;
-  // any *.fixture.json a hacker drops alongside them gets picked up too.
+  // Root agent schemas (Plana). Bare catalog schemas live here today;
+  // any *.fixture.json a developer drops alongside them gets picked up too.
   join(REPO_ROOT, "agent", "src", "a2ui", "schemas"),
   // In-repo legal-contract-review example fixtures (canonical fixture shape).
   join(REPO_ROOT, "other-examples", "legal-contract-review", "schemas"),

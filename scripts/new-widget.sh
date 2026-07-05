@@ -2,12 +2,12 @@
 # scripts/new-widget.sh — Scaffold a new A2UI widget catalog schema + fixture.
 #
 # Bare-bones equivalent of the .claude/skills/create-a2ui-widget skill (which
-# walks an AI assistant + the hacker through the full widget dance). This
-# script seeds the two JSON files (catalog schema + fixture) so the hacker has
+# walks an AI assistant + the developer through the full widget dance). This
+# script seeds the two JSON files (catalog schema + fixture) so the developer has
 # a stable starting point.
 #
-# pdf-analyst default swap: the canonical "copy this" widget is no longer the
-# archived PortKit risk_register tool. The pdf-analyst default defines its
+# Plana default swap: the canonical "copy this" widget is no longer the
+# archived PortKit risk_register tool. The Plana default defines its
 # catalog in TypeScript at src/a2ui/catalog/definitions.ts (component props,
 # Zod schemas) + src/a2ui/catalog/renderers.tsx (the React renderers). The
 # backing agent is the FastAPI app at agent/main.py (/fixed, /dynamic,
@@ -63,7 +63,7 @@ if [[ -e "$FIXTURE_PATH" ]]; then
 fi
 
 # Catalog schema — bare v0.9 component array (shape (a)). Mirrors the shape of
-# agent/src/a2ui/schemas/dashboard.json (the pdf-analyst dashboard surface).
+# agent/src/a2ui/schemas/dashboard.json (the Plana dashboard surface).
 # Uses "Stack" for the root container — that's the layout primitive in the
 # live catalog (src/a2ui/catalog/definitions.ts); there is no "Column".
 cat > "$CATALOG_PATH" <<JSON
@@ -88,7 +88,7 @@ JSON
 
 # Fixture — full envelope shape for pnpm test:widgets. The catalogId matches
 # CATALOG_ID in src/a2ui/catalog/definitions.ts + agent/src/catalog.py — the
-# live pdf-analyst catalog (the old copilotkit://app-dashboard-catalog ID was
+# live Plana catalog (the old copilotkit://app-dashboard-catalog ID was
 # archived with PortKit).
 cat > "$FIXTURE_PATH" <<JSON
 {
@@ -130,7 +130,7 @@ echo -e "${GREEN}${BOLD}Created two widget files:${RESET}"
 echo -e "  ${BOLD}${CATALOG_PATH}${RESET}"
 echo -e "  ${BOLD}${FIXTURE_PATH}${RESET}"
 echo
-echo -e "${BOLD}Next steps (the component dance — pdf-analyst layout):${RESET}"
+echo -e "${BOLD}Next steps (the component dance — Plana layout):${RESET}"
 echo -e "  ${DIM}1. (done) Catalog schema → ${NAME}.json${RESET}"
 echo -e "  ${DIM}2. (done) Fixture       → ${NAME}.fixture.json${RESET}"
 echo -e "  ${DIM}3. Register the component in the frontend catalog:${RESET}"

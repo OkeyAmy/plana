@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SiteNav } from "@/components/pdf-analyst/Brand";
+import { SiteNav } from "@/components/plana/Brand";
 
 export default function Home() {
   return (
