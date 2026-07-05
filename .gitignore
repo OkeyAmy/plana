@@ -51,6 +51,7 @@ next-env.d.ts
 
 # Tools
 .scratch/
+docs/superpowers/
 
 # Local-only Claude state (skills + settings.json are tracked)
 .claude/local/
