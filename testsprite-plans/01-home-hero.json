@@ -1,0 +1,23 @@
+{
+  "projectId": "b298bfd7-93c5-4774-8973-327faf5af513",
+  "type": "frontend",
+  "name": "Home \u2014 hero and primary CTAs render",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate to / on the configured Plana deployment."
+    },
+    {
+      "type": "assertion",
+      "description": "The page shows the Plana brand in the navigation and the headline text \"Design your room\"."
+    },
+    {
+      "type": "assertion",
+      "description": "The hero shows the gradient headline phrase \"down to the centimetre.\" and the primary CTA \"Start designing\"."
+    },
+    {
+      "type": "assertion",
+      "description": "The social proof strip shows all four labels: \"Real cm\", \"Live\", \"A2UI\", and \"Drag & drop\"."
+    }
+  ]
+}

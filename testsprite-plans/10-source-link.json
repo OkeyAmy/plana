@@ -1,0 +1,23 @@
+{
+  "projectId": "b298bfd7-93c5-4774-8973-327faf5af513",
+  "type": "frontend",
+  "name": "Navigation \u2014 GitHub link is safe and reachable",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate to /."
+    },
+    {
+      "type": "assertion",
+      "description": "The navigation shows a \"GitHub\" link."
+    },
+    {
+      "type": "action",
+      "description": "Inspect the \"GitHub\" link without leaving the app."
+    },
+    {
+      "type": "assertion",
+      "description": "The GitHub link href is \"https://github.com/OkeyAmy/plana\" and it opens in a new tab."
+    }
+  ]
+}

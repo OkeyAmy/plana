@@ -1,0 +1,31 @@
+{
+  "projectId": "b298bfd7-93c5-4774-8973-327faf5af513",
+  "type": "frontend",
+  "name": "Designer \u2014 split pane resize control is accessible and bounded",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate directly to /fixed."
+    },
+    {
+      "type": "assertion",
+      "description": "There is a vertical separator control with accessible label \"Resize chat sidebar\"."
+    },
+    {
+      "type": "action",
+      "description": "Drag the vertical separator noticeably to the right, then release it."
+    },
+    {
+      "type": "assertion",
+      "description": "Both the chat panel and canvas panel remain visible after resizing; neither pane collapses to zero width."
+    },
+    {
+      "type": "action",
+      "description": "Reload the page."
+    },
+    {
+      "type": "assertion",
+      "description": "The /fixed route still shows \"Room Designer\", \"agent ready\", and the canvas empty-state title \"No layout yet\" after reload."
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "projectId": "b298bfd7-93c5-4774-8973-327faf5af513",
+  "type": "frontend",
+  "name": "Designer \u2014 empty workspace shell renders",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate directly to /fixed."
+    },
+    {
+      "type": "assertion",
+      "description": "The left chat panel shows the welcome text containing \"Design a minimalist bedroom, 520\u00d7430 cm.\""
+    },
+    {
+      "type": "assertion",
+      "description": "The right canvas empty state shows \"No layout yet\"."
+    },
+    {
+      "type": "assertion",
+      "description": "The canvas hint shows \"try: \u201cdesign a minimalist bedroom 500\u00d7400 cm\u201d\"."
+    },
+    {
+      "type": "assertion",
+      "description": "The navigation contains \"Home\", \"Designer\", and \"GitHub\"."
+    }
+  ]
+}

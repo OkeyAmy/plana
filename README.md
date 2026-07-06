@@ -6,6 +6,10 @@ The project is built for the **TestSprite Hackathon Season 3** CLI Launch & Loop
 
 **Repository:** https://github.com/OkeyAmy/plana
 
+**Live app:** https://plana-fl0t.onrender.com/
+
+**TestSprite account/project:** OkeyAmy — frontend project `b298bfd7-93c5-4774-8973-327faf5af513`, backend project `956f829e-873c-4499-8709-eff18779deb3`
+
 ## What Plana Does
 
 - Generates room layouts from natural language prompts such as “design a 520 x 430 cm Scandinavian bedroom with a king bed, wardrobe, and desk near the window.”
@@ -47,8 +51,8 @@ The frontend talks to `/api/copilotkit-plana`, which proxies two FastAPI agent e
 ### Install
 
 ```bash
-git clone https://github.com/OkeyAmy/ai_home_designer.git
-cd ai_home_designer
+git clone https://github.com/OkeyAmy/plana.git
+cd plana
 pnpm install
 ```
 
@@ -145,6 +149,25 @@ Keep the south door swing clear and leave an 80 cm walkway.
 | `DYNAMIC_AGENT_URL` | No | Defaults to `http://localhost:8123/dynamic` |
 | `LINKUP_API_KEY` | No | Enables furniture-shopping search |
 | `OFFLINE` | No | `1` enables the fixed-agent offline sample |
+
+## TestSprite Loop Coverage
+
+The seeded TestSprite suite runs against the public Render deployment and currently covers:
+
+- landing page hero, CTAs, feature sections, and verification-loop copy
+- navigation from home into the room designer workspace
+- `/fixed` room-designer shell, text-prompt layout generation, and follow-up revision flow
+- `/catalog` component inventory, counts, and category filters
+- `/dynamic` workspace shell and canvas empty state
+- split-pane resize behavior and deep-link routing across `/`, `/fixed`, `/dynamic`, and `/catalog`
+- backend/API contracts for the home route, designer route, and furniture-search endpoint
+
+Latest TestSprite run state:
+
+- Frontend project `b298bfd7-93c5-4774-8973-327faf5af513`: 12/12 tests passing
+- Backend project `956f829e-873c-4499-8709-eff18779deb3`: 3/3 tests passing
+
+`LOOP.md` records the agent-written build/test/fix loop in one line per iteration.
 
 ## Verification
 

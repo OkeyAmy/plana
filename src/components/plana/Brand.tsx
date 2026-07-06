@@ -63,7 +63,7 @@ export function SiteNav({
           <div className="w-px h-4 bg-[var(--line)] mx-2" />
 
           <a
-            href="https://github.com/OkeyAmy/ai_home_designer"
+            href="https://github.com/OkeyAmy/plana"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[13px] text-[var(--muted)] hover:text-[var(--ink)] transition-colors"

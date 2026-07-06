@@ -1,0 +1,31 @@
+{
+  "projectId": "b298bfd7-93c5-4774-8973-327faf5af513",
+  "type": "frontend",
+  "name": "Designer \u2014 text prompt generates a room layout",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate to /fixed."
+    },
+    {
+      "type": "action",
+      "description": "In the chat input, enter: \"Design a 520 x 430 cm minimalist bedroom with a queen bed, two nightstands, wardrobe, desk near the window, rug, and plant. Keep an 80 cm walkway.\""
+    },
+    {
+      "type": "action",
+      "description": "Submit the chat message and wait for the agent response to finish."
+    },
+    {
+      "type": "assertion",
+      "description": "The right canvas no longer shows the empty-state title \"No layout yet\"."
+    },
+    {
+      "type": "assertion",
+      "description": "The rendered floor-plan surface shows room dimensions including \"520\" and \"430\"."
+    },
+    {
+      "type": "assertion",
+      "description": "The rendered layout includes bedroom furniture labels or text for bed, wardrobe, desk, and rug."
+    }
+  ]
+}

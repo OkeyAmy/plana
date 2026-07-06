@@ -1,0 +1,23 @@
+{
+  "projectId": "b298bfd7-93c5-4774-8973-327faf5af513",
+  "type": "frontend",
+  "name": "Dynamic \u2014 workspace shell renders",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate directly to /dynamic."
+    },
+    {
+      "type": "assertion",
+      "description": "The chat welcome text says \"Attach a PDF using the clip button, then ask any question about its contents.\""
+    },
+    {
+      "type": "assertion",
+      "description": "The chat input placeholder says \"Attach a PDF, then ask anything\u2026\"."
+    },
+    {
+      "type": "assertion",
+      "description": "The right canvas empty state shows \"Canvas is empty\" and the hint text \"try: \u201cShow me the revenue trend.\u201d\"."
+    }
+  ]
+}

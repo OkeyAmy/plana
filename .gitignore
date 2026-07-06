@@ -24,6 +24,7 @@ build
 # misc
 .DS_Store
 *.pem
+*.mp3
 
 # debug
 npm-debug.log*
@@ -52,6 +53,13 @@ next-env.d.ts
 # Tools
 .scratch/
 docs/superpowers/
+
+# Private/heavy TestSprite run artifacts
+.testsprite/runs/**/failure.json
+.testsprite/runs/**/result.json
+.testsprite/runs/**/steps/
+.testsprite/runs/**/*.mp4
+.testsprite/runs/**/*.webm
 
 # Local-only Claude state (skills + settings.json are tracked)
 .claude/local/

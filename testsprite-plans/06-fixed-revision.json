@@ -1,0 +1,35 @@
+{
+  "projectId": "b298bfd7-93c5-4774-8973-327faf5af513",
+  "type": "frontend",
+  "name": "Designer \u2014 revision preserves layout surface",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate to /fixed."
+    },
+    {
+      "type": "action",
+      "description": "Submit this chat prompt: \"Design a 500 x 400 cm office with a desk near the north wall, office chair, bookcase, shelf, rug, and plant.\""
+    },
+    {
+      "type": "action",
+      "description": "Wait until a layout appears in the canvas."
+    },
+    {
+      "type": "action",
+      "description": "Submit this follow-up prompt: \"Move the bookcase to the west wall and add a second plant, but keep the desk and chair.\""
+    },
+    {
+      "type": "action",
+      "description": "Wait until the updated response finishes."
+    },
+    {
+      "type": "assertion",
+      "description": "The canvas still shows a floor-plan surface rather than the empty state."
+    },
+    {
+      "type": "assertion",
+      "description": "The rendered layout still includes desk and office chair text or labels after the revision."
+    }
+  ]
+}

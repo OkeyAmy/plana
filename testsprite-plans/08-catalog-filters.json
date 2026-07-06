@@ -1,0 +1,39 @@
+{
+  "projectId": "b298bfd7-93c5-4774-8973-327faf5af513",
+  "type": "frontend",
+  "name": "Catalog \u2014 filters narrow component groups",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate directly to /catalog."
+    },
+    {
+      "type": "action",
+      "description": "Click the \"Data viz\" filter button."
+    },
+    {
+      "type": "assertion",
+      "description": "The summary control changes to \"showing 7 / 21\"."
+    },
+    {
+      "type": "assertion",
+      "description": "The visible cards include \"BarChart\", \"HorizontalBarChart\", \"LineChart\", \"DonutChart\", \"ScatterChart\", and \"DataTable\"."
+    },
+    {
+      "type": "action",
+      "description": "Click the \"Interactive\" filter button."
+    },
+    {
+      "type": "assertion",
+      "description": "The summary control changes to \"showing 2 / 21\" and the visible cards are \"Button\" and \"ChoiceChips\"."
+    },
+    {
+      "type": "action",
+      "description": "Click the \"All\" filter button."
+    },
+    {
+      "type": "assertion",
+      "description": "The summary control returns to \"showing 21 / 21\"."
+    }
+  ]
+}

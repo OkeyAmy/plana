@@ -1,0 +1,8 @@
+[
+  {
+    "kind": "snapshot",
+    "stepIndex": 11,
+    "summary": "Step 11 'Click the 'Plana' brand link in the top navigation and verify the landing headline 'Design your room' appears and the URL returns to the site root' passed.",
+    "path": "steps/11-snapshot.html"
+  }
+]

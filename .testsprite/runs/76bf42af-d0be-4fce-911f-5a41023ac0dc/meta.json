@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "cli-v1",
+  "snapshotId": "snap_aa6107f3757faa94",
+  "testId": "d3e2fd2e-85b0-4fef-b209-32b282d3efe1",
+  "projectId": "b298bfd7-93c5-4774-8973-327faf5af513",
+  "codeVersion": "v2",
+  "runIdIfAvailable": "76bf42af-d0be-4fce-911f-5a41023ac0dc",
+  "targetUrl": "https://plana-fl0t.onrender.com/",
+  "failedStepIndex": 2,
+  "failureKind": null,
+  "capturedAt": "2026-07-05T23:49:08.146Z",
+  "fetchedAt": "2026-07-06T00:09:18.655Z"
+}

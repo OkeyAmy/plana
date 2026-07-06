@@ -1,0 +1,23 @@
+{
+  "projectId": "b298bfd7-93c5-4774-8973-327faf5af513",
+  "type": "frontend",
+  "name": "Home \u2014 feature narrative is visible",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate to / and scroll through the landing page."
+    },
+    {
+      "type": "assertion",
+      "description": "The \"How it works\" section shows the three step titles \"Describe or upload\", \"AI generates the layout\", and \"Drag, rotate, refine\"."
+    },
+    {
+      "type": "assertion",
+      "description": "The \"Features\" section shows cards titled \"Pixel-perfect to scale\", \"Collision detection\", \"One-click rotate\", \"Any room, any furniture\", and \"Shopping suggestions\"."
+    },
+    {
+      "type": "assertion",
+      "description": "The \"The loop\" section shows the four verification loop labels \"Write\", \"Verify\", \"Fix\", and \"Verify again\"."
+    }
+  ]
+}

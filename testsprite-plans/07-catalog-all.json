@@ -1,0 +1,23 @@
+{
+  "projectId": "b298bfd7-93c5-4774-8973-327faf5af513",
+  "type": "frontend",
+  "name": "Catalog \u2014 all component examples render",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate directly to /catalog."
+    },
+    {
+      "type": "assertion",
+      "description": "The page header shows \"COMPONENT CATALOG\" and \"Plana\u2019s A2UI catalog\"."
+    },
+    {
+      "type": "assertion",
+      "description": "The summary control shows \"showing 21 / 21\"."
+    },
+    {
+      "type": "assertion",
+      "description": "The catalog grid includes example cards named \"Stack\", \"Grid\", \"StatCard\", \"BarChart\", \"DataTable\", \"Button\", and \"ChoiceChips\"."
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "projectId": "b298bfd7-93c5-4774-8973-327faf5af513",
+  "type": "frontend",
+  "name": "Navigation \u2014 start designing opens workspace",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate to / and click the \"Start designing\" CTA."
+    },
+    {
+      "type": "assertion",
+      "description": "The browser URL path is /fixed."
+    },
+    {
+      "type": "assertion",
+      "description": "The workspace header shows \"Room Designer\" and \"Plana \u00b7 AI Floor Plan Generator\"."
+    },
+    {
+      "type": "assertion",
+      "description": "The status pill shows \"agent ready\"."
+    }
+  ]
+}

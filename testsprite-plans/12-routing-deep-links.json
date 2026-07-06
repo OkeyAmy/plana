@@ -1,0 +1,39 @@
+{
+  "projectId": "b298bfd7-93c5-4774-8973-327faf5af513",
+  "type": "frontend",
+  "name": "Routing \u2014 deep links load without landing-page dependency",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate directly to /catalog."
+    },
+    {
+      "type": "assertion",
+      "description": "The browser URL path is /catalog and the page shows \"COMPONENT CATALOG\"."
+    },
+    {
+      "type": "action",
+      "description": "Navigate directly to /dynamic."
+    },
+    {
+      "type": "assertion",
+      "description": "The browser URL path is /dynamic and the page shows \"Canvas is empty\"."
+    },
+    {
+      "type": "action",
+      "description": "Navigate directly to /fixed."
+    },
+    {
+      "type": "assertion",
+      "description": "The browser URL path is /fixed and the page shows \"Room Designer\"."
+    },
+    {
+      "type": "action",
+      "description": "Click the Plana brand in the top navigation."
+    },
+    {
+      "type": "assertion",
+      "description": "The browser URL path returns to / and the landing page headline shows \"Design your room\"."
+    }
+  ]
+}

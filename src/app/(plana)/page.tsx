@@ -77,7 +77,7 @@ export default function Home() {
               <ArrowRight />
             </Link>
             <a
-              href="https://github.com/OkeyAmy/ai_home_designer"
+              href="https://github.com/OkeyAmy/plana"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl text-[15px] font-medium border border-[var(--line)] bg-[var(--surface)] hover:border-[var(--lilac)] transition-colors text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer"
