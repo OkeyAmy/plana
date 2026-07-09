@@ -1,0 +1,18 @@
+{
+  "testId": "d3e2fd2e-85b0-4fef-b209-32b282d3efe1",
+  "status": "failed",
+  "startedAt": null,
+  "finishedAt": "2026-07-05T23:14:39.852Z",
+  "videoUrl": null,
+  "failureAnalysisUrl": null,
+  "snapshotId": "snap_642e0ea5f6cc43d7",
+  "runIdIfAvailable": "e1566651-9149-4ca9-b32c-6cae8913446f",
+  "codeVersion": "v1",
+  "targetUrl": "https://plana-fl0t.onrender.com/",
+  "targetUrlSource": "run",
+  "failedStepIndex": 1,
+  "failureKind": "timeout",
+  "verdict": "failed",
+  "executionStatus": "completed",
+  "summary": "Failed (timeout): Locator expected to contain text 'Real cm'\nActual value:  \nCall log:\n  - Expect \"to_contain_text\" with timeout 15000ms\n  - waiting for locator(\"xpath=/html/body/div[2]/section/div[3]\").first\n    19 × locator resolved to <div class=\"absolute top-7 left-7 w-6 h-6 border-l-2 border-t-2 border-[var(--lilac)] opacity-30\"></div>\n       - unexpected value \"\""
+}

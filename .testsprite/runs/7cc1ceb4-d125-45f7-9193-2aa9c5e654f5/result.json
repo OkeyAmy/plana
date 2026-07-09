@@ -1,0 +1,18 @@
+{
+  "testId": "242f9296-5682-4213-98b9-6d1c08605992",
+  "status": "blocked",
+  "startedAt": "2026-07-05T23:57:02.452Z",
+  "finishedAt": "2026-07-06T00:05:33.703Z",
+  "videoUrl": "https://testsprite-videos.s3.us-east-1.amazonaws.com/84683458-e011-704a-2b09-b3c3c92cb158/1783296333476957//tmp/7c3cb59c-c635-4962-9809-0d6a5d4d50bb/result.webm",
+  "failureAnalysisUrl": null,
+  "snapshotId": "snap_8eab39aad11d8fd2",
+  "runIdIfAvailable": "7cc1ceb4-d125-45f7-9193-2aa9c5e654f5",
+  "codeVersion": "v2",
+  "targetUrl": "https://plana-fl0t.onrender.com/",
+  "targetUrlSource": "run",
+  "failedStepIndex": 11,
+  "failureKind": null,
+  "verdict": "blocked",
+  "executionStatus": "completed",
+  "summary": "Blocked before a verdict could be produced: TEST BLOCKED: PASS: All requested verifications completed.\n\nSummary of results (observed in this session):\n- Navigated to /catalog (https://plana-fl0t.onrender.com/catalog).\n- Data viz filter: confirmed 'SHOWING 7 / 21' and the visible data-viz cards include BarChart, HorizontalBarChart, LineChart, DonutChart, ScatterChart, and DataTable (search matches recorded in session).\n- Interactive filter: confirmed 'SHOWING 2 / 21' and the visible interactive …"
+}

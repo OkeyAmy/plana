@@ -1,0 +1,18 @@
+{
+  "testId": "d3e2fd2e-85b0-4fef-b209-32b282d3efe1",
+  "status": "blocked",
+  "startedAt": "2026-07-05T23:48:15.494Z",
+  "finishedAt": "2026-07-05T23:49:08.146Z",
+  "videoUrl": "https://testsprite-videos.s3.us-east-1.amazonaws.com/84683458-e011-704a-2b09-b3c3c92cb158/1783295347947752//tmp/e4495018-26a9-4fd1-8546-c255b1d50ca5/result.webm",
+  "failureAnalysisUrl": null,
+  "snapshotId": "snap_aa6107f3757faa94",
+  "runIdIfAvailable": "76bf42af-d0be-4fce-911f-5a41023ac0dc",
+  "codeVersion": "v2",
+  "targetUrl": "https://plana-fl0t.onrender.com/",
+  "targetUrlSource": "run",
+  "failedStepIndex": 2,
+  "failureKind": null,
+  "verdict": "blocked",
+  "executionStatus": "completed",
+  "summary": "Blocked before a verdict could be produced: TEST BLOCKED\n\nThe Plana homepage could not be reached — the deployment shows a Render hosting startup/loading page instead of the Plana UI.\n\nObservations:\n- The page displays Render startup logs and an 'Application loading' indicator.\n- The expected Plana brand, headline 'Design your room', CTA 'Start designing', and the social proof labels ('Real cm', 'Live', 'A2UI', 'Drag & drop') are not present on the page."
+}

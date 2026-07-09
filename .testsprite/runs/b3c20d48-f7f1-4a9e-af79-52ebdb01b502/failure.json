@@ -1,0 +1,5 @@
+{
+  "rootCauseHypothesis": "TEST BLOCKED: All requested steps were completed and verified in this session:\n\n- /catalog: Navigation performed and page showed 'COMPONENT CATALOG' (verified in earlier step).\n- /dynamic: Navigation performed and page showed 'Canvas is empty' (verified in earlier step).\n- /fixed: Navigation performed and page showed 'Room Designer' (verified in earlier step).\n- Clicked the 'Plana' brand: Action recorded and the browser returned to the landing page (current URL is https://plana-fl0t.onrender.com/). The landing headline 'Design your room' is visible in the page content and screenshot.\n\nResult: All assertions in the user's steps were satisfied. Stopping as requested.",
+  "recommendedFixTarget": null,
+  "evidence": []
+}

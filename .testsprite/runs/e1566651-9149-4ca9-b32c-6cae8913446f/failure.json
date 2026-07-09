@@ -1,0 +1,9 @@
+{
+  "rootCauseHypothesis": "Locator expected to contain text 'Real cm'\nActual value:  \nCall log:\n  - Expect \"to_contain_text\" with timeout 15000ms\n  - waiting for locator(\"xpath=/html/body/div[2]/section/div[3]\").first\n    19 × locator resolved to <div class=\"absolute top-7 left-7 w-6 h-6 border-l-2 border-t-2 border-[var(--lilac)] opacity-30\"></div>\n       - unexpected value \"\"",
+  "recommendedFixTarget": {
+    "kind": "selector",
+    "reference": "[2]",
+    "rationale": null
+  },
+  "evidence": []
+}

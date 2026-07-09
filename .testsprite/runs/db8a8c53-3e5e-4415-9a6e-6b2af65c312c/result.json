@@ -1,0 +1,18 @@
+{
+  "testId": "321dfc8c-ad41-4a29-a217-07de46489e8d",
+  "status": "failed",
+  "startedAt": null,
+  "finishedAt": "2026-07-05T23:14:49.705Z",
+  "videoUrl": null,
+  "failureAnalysisUrl": null,
+  "snapshotId": "snap_43596824a517c8dc",
+  "runIdIfAvailable": "db8a8c53-3e5e-4415-9a6e-6b2af65c312c",
+  "codeVersion": "v1",
+  "targetUrl": "https://plana-fl0t.onrender.com/",
+  "targetUrlSource": "run",
+  "failedStepIndex": 1,
+  "failureKind": "timeout",
+  "verdict": "failed",
+  "executionStatus": "completed",
+  "summary": "Failed (timeout): Locator expected to contain text 'Room Designer'\nActual value:  \nCall log:\n  - Expect \"to_contain_text\" with timeout 15000ms\n  - waiting for locator(\"xpath=/html/body/div[2]/div/div[2]/div/div[3]/div/div/div[1]\").first\n    19 × locator resolved to <div aria-hidden=\"true\" class=\"w-12 h-12 rounded-2xl flex items-center justify-center\">…</div>\n       - unexpected value \"\""
+}

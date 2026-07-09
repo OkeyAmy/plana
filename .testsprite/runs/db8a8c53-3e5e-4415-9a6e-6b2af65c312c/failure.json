@@ -1,0 +1,9 @@
+{
+  "rootCauseHypothesis": "Locator expected to contain text 'Room Designer'\nActual value:  \nCall log:\n  - Expect \"to_contain_text\" with timeout 15000ms\n  - waiting for locator(\"xpath=/html/body/div[2]/div/div[2]/div/div[3]/div/div/div[1]\").first\n    19 × locator resolved to <div aria-hidden=\"true\" class=\"w-12 h-12 rounded-2xl flex items-center justify-center\">…</div>\n       - unexpected value \"\"",
+  "recommendedFixTarget": {
+    "kind": "selector",
+    "reference": "[2]",
+    "rationale": null
+  },
+  "evidence": []
+}

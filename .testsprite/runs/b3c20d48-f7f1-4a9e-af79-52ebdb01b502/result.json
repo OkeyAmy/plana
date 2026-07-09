@@ -1,0 +1,18 @@
+{
+  "testId": "c98850d8-9514-497b-892a-c0925ce65930",
+  "status": "blocked",
+  "startedAt": "2026-07-06T00:05:47.375Z",
+  "finishedAt": "2026-07-06T00:08:34.709Z",
+  "videoUrl": "https://testsprite-videos.s3.us-east-1.amazonaws.com/84683458-e011-704a-2b09-b3c3c92cb158/1783296514453922//tmp/f703f4ce-57ad-49e1-96d0-79e19c4c7440/result.webm",
+  "failureAnalysisUrl": null,
+  "snapshotId": "snap_5a1a43736bf46efb",
+  "runIdIfAvailable": "b3c20d48-f7f1-4a9e-af79-52ebdb01b502",
+  "codeVersion": "v2",
+  "targetUrl": "https://plana-fl0t.onrender.com/",
+  "targetUrlSource": "run",
+  "failedStepIndex": 6,
+  "failureKind": null,
+  "verdict": "blocked",
+  "executionStatus": "completed",
+  "summary": "Blocked before a verdict could be produced: TEST BLOCKED: All requested steps were completed and verified in this session:\n\n- /catalog: Navigation performed and page showed 'COMPONENT CATALOG' (verified in earlier step).\n- /dynamic: Navigation performed and page showed 'Canvas is empty' (verified in earlier step).\n- /fixed: Navigation performed and page showed 'Room Designer' (verified in earlier step).\n- Clicked the 'Plana' brand: Action recorded and the browser returned to the landing page (c…"
+}

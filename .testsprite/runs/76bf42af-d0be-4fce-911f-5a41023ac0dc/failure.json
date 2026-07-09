@@ -1,0 +1,5 @@
+{
+  "rootCauseHypothesis": "TEST BLOCKED\n\nThe Plana homepage could not be reached — the deployment shows a Render hosting startup/loading page instead of the Plana UI.\n\nObservations:\n- The page displays Render startup logs and an 'Application loading' indicator.\n- The expected Plana brand, headline 'Design your room', CTA 'Start designing', and the social proof labels ('Real cm', 'Live', 'A2UI', 'Drag & drop') are not present on the page.",
+  "recommendedFixTarget": null,
+  "evidence": []
+}
