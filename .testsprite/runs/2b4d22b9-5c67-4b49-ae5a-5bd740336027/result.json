@@ -1,0 +1,18 @@
+{
+  "testId": "c98850d8-9514-497b-892a-c0925ce65930",
+  "status": "blocked",
+  "startedAt": "2026-07-09T10:07:40.320Z",
+  "finishedAt": "2026-07-09T10:10:17.043Z",
+  "videoUrl": "https://testsprite-videos.s3.us-east-1.amazonaws.com/84683458-e011-704a-2b09-b3c3c92cb158/178359181683737//tmp/c7109803-077e-45f7-83f4-25b61d072114/result.webm",
+  "failureAnalysisUrl": null,
+  "snapshotId": "snap_406ce4a0ad905d66",
+  "runIdIfAvailable": "2b4d22b9-5c67-4b49-ae5a-5bd740336027",
+  "codeVersion": "v3",
+  "targetUrl": "https://plana-fl0t.onrender.com/",
+  "targetUrlSource": "run",
+  "failedStepIndex": 6,
+  "failureKind": null,
+  "verdict": "blocked",
+  "executionStatus": "completed",
+  "summary": "Blocked before a verdict could be produced: TEST BLOCKED: Result summary (observed in this session):\n- /catalog was visited and the page displayed the text 'COMPONENT CATALOG'.\n- /dynamic was visited and the page displayed the text 'Canvas is empty'.\n- /fixed was visited and the page displayed the heading 'Room Designer'.\n- The Plana brand in the top navigation was clicked and the browser returned to the landing page at https://plana-fl0t.onrender.com/ (root path '/'). The landing page headline…"
+}

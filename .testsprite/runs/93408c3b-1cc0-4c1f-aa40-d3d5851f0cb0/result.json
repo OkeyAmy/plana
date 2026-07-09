@@ -1,0 +1,18 @@
+{
+  "testId": "6e606130-b9b1-4a32-bebb-1806a129cc88",
+  "status": "blocked",
+  "startedAt": "2026-07-09T10:07:40.687Z",
+  "finishedAt": "2026-07-09T10:10:39.343Z",
+  "videoUrl": "https://testsprite-videos.s3.us-east-1.amazonaws.com/84683458-e011-704a-2b09-b3c3c92cb158/1783591839111255//tmp/292bf540-9260-433b-9d97-19e0f19e924f/result.webm",
+  "failureAnalysisUrl": null,
+  "snapshotId": "snap_84188fd28bbf8eb6",
+  "runIdIfAvailable": "93408c3b-1cc0-4c1f-aa40-d3d5851f0cb0",
+  "codeVersion": "v2",
+  "targetUrl": "https://plana-fl0t.onrender.com/",
+  "targetUrlSource": "run",
+  "failedStepIndex": 4,
+  "failureKind": null,
+  "verdict": "blocked",
+  "executionStatus": "completed",
+  "summary": "Blocked before a verdict could be produced: TEST BLOCKED: Result summary for https://plana-fl0t.onrender.com/catalog\n\nAll requested assertions were verified using the visible UI in this session (browser_state and screenshot):\n\n- Navigation: The page at https://plana-fl0t.onrender.com/catalog was reached and inspected.\n- Header/title: The page shows \"COMPONENT CATALOG\" and \"Plana’s A2UI catalog\" (both strings visible in the header/hero area).\n- Summary control: The catalog summary displays \"show…"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "plana-demo-video",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "remotion studio src/index.tsx",
+    "studio": "remotion studio src/index.tsx",
+    "render": "remotion render src/index.tsx PlanaDemo out/plana-demo.mp4",
+    "still": "remotion still src/index.tsx PlanaDemo out/preview.png --frame=180 --scale=0.5",
+    "voiceover": "node --env-file=.env scripts/generate-voiceover.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@geist-ui/icons": "latest",
+    "@remotion/cli": "4.0.485",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "remotion": "4.0.485",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  }
+}

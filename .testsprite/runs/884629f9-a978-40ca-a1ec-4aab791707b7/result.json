@@ -1,0 +1,18 @@
+{
+  "testId": "b418914e-0de3-4256-9bee-fe5f9a346270",
+  "status": "failed",
+  "startedAt": "2026-07-09T09:52:24.363901+00:00",
+  "finishedAt": "2026-07-09T09:52:54.821Z",
+  "videoUrl": null,
+  "failureAnalysisUrl": null,
+  "snapshotId": "snap_bcf68891e7cf29bf",
+  "runIdIfAvailable": "884629f9-a978-40ca-a1ec-4aab791707b7",
+  "codeVersion": "v1",
+  "targetUrl": null,
+  "targetUrlSource": "project-default",
+  "failedStepIndex": 1,
+  "failureKind": "timeout",
+  "verdict": "failed",
+  "executionStatus": "completed",
+  "summary": "Failed (timeout): HTTPSConnectionPool(host='plana-fl0t.onrender.com', port=443): Read timed out. (read timeout=30)"
+}

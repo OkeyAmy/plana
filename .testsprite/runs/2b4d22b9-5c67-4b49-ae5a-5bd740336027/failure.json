@@ -1,0 +1,5 @@
+{
+  "rootCauseHypothesis": "TEST BLOCKED: Result summary (observed in this session):\n- /catalog was visited and the page displayed the text 'COMPONENT CATALOG'.\n- /dynamic was visited and the page displayed the text 'Canvas is empty'.\n- /fixed was visited and the page displayed the heading 'Room Designer'.\n- The Plana brand in the top navigation was clicked and the browser returned to the landing page at https://plana-fl0t.onrender.com/ (root path '/'). The landing page headline 'Design your room' is visible as shown in the page content and screenshot.\nAll required assertions from the user request were satisfied. No blocking issues occurred. The test is complete.",
+  "recommendedFixTarget": null,
+  "evidence": []
+}
