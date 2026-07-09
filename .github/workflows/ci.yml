@@ -131,7 +131,7 @@ jobs:
 
       - name: Install TestSprite CLI
         if: steps.ts_key.outputs.available == 'true'
-        run: npm install -g testsprite
+        run: npm install -g @testsprite/testsprite-cli
 
       # Render's free tier spins down after inactivity. Wake it up so tests
       # don't hit a 30-second read-timeout on cold start.
@@ -151,70 +151,67 @@ jobs:
           echo "::error::App did not respond with 200 after 3 minutes — aborting."
           exit 1
 
-      # FE tests must be triggered individually (--all skips them in the BE
-      # wave engine). Run all 12 in parallel; only fail if status == "failed".
-      # "blocked" is a TestSprite platform quirk where the agent correctly
-      # verified all assertions but the orchestrator marked it blocked — treat
-      # it as a pass.
-      - name: TestSprite — frontend suite (12 tests, parallel)
+      # FE tests must be triggered individually (--all only runs BE tests in
+      # the wave engine). Fetch IDs from the project, run all in parallel,
+      # then only fail on status == "failed". "blocked" = assertions verified
+      # but orchestrator mislabelled — treat as pass per observed behaviour.
+      - name: TestSprite — frontend suite (parallel)
         if: steps.ts_key.outputs.available == 'true'
+        env:
+          FE_PROJECT: b298bfd7-93c5-4774-8973-327faf5af513
         run: |
           set -euo pipefail
 
-          FE_IDS=(
-            "6e606130-b9b1-4a32-bebb-1806a129cc88"
-            "8e01d0e0-4a24-45c8-a492-bec305dd1965"
-            "c98850d8-9514-497b-892a-c0925ce65930"
-            "321dfc8c-ad41-4a29-a217-07de46489e8d"
-            "5c1c2303-1426-4b9a-86f2-755688247543"
-            "2ce89f48-c223-4fc8-baad-13de8e6a5c2f"
-            "902b6b20-83ae-434c-8c79-dcf3344e9c3c"
-            "f0a4a04f-9a13-4e8d-8ddd-a3fb3f6bc3b8"
-            "c702a1d6-debe-40f4-b589-eb2d23be9fb9"
-            "242f9296-5682-4213-98b9-6d1c08605992"
-            "d3e2fd2e-85b0-4fef-b209-32b282d3efe1"
-            "45be3114-b18f-4d59-bad8-40bec49cee32"
-          )
-
           TMPDIR_TS=$(mktemp -d)
 
-          # Dispatch all tests in parallel
+          # Fetch FE test IDs from the project
+          mapfile -t FE_IDS < <(
+            testsprite test list --project "$FE_PROJECT" --output json \
+              | jq -r '.[].testId'
+          )
+          echo "Dispatching ${#FE_IDS[@]} FE tests in parallel..."
+
+          # Dispatch all in parallel
           for id in "${FE_IDS[@]}"; do
             (
-              testsprite --output json test run "$id" --wait --timeout 720 \
+              testsprite test run "$id" \
+                --wait --timeout 720 --output json \
+                --idempotency-key "ci-fe-$id-${{ github.run_id }}-${{ github.run_attempt }}" \
                 > "$TMPDIR_TS/$id.json" 2>/dev/null
               echo $? > "$TMPDIR_TS/$id.exit"
             ) &
           done
           wait
 
-          # Evaluate results — only "failed" is a real failure
+          # Only "failed" is a hard failure; "blocked" = pass quirk
           HARD_FAIL=0
           for id in "${FE_IDS[@]}"; do
             status=$(jq -r '.status // "unknown"' "$TMPDIR_TS/$id.json" 2>/dev/null || echo "unknown")
             exit_code=$(cat "$TMPDIR_TS/$id.exit" 2>/dev/null || echo "1")
             if [[ "$status" == "failed" ]]; then
-              echo "::error::FAIL — FE test $id (status=$status)"
+              echo "::error::FAIL — FE test $id"
+              testsprite test failure get "$id" --out "$TMPDIR_TS/failure-$id" 2>/dev/null || true
               HARD_FAIL=$((HARD_FAIL + 1))
             elif [[ "$exit_code" == "7" ]]; then
-              echo "::warning::TIMEOUT — FE test $id exceeded 720s poll window"
+              echo "::warning::TIMEOUT — FE test $id exceeded 720s"
             else
-              echo "OK — FE test $id (status=$status)"
+              echo "OK — FE test $id (status=${status})"
             fi
           done
-
           [[ $HARD_FAIL -eq 0 ]] || exit 1
 
-      # BE tests use the wave engine (--all). No --target-url; URL is baked
-      # into the test code.
-      - name: TestSprite — backend suite (3 tests)
+      # BE tests use the wave engine (--all). URL is baked into the test code.
+      - name: TestSprite — backend suite
         if: steps.ts_key.outputs.available == 'true'
+        env:
+          BE_PROJECT: 956f829e-873c-4499-8709-eff18779deb3
         run: |
           testsprite test run \
             --all \
-            --project 956f829e-873c-4499-8709-eff18779deb3 \
+            --project "$BE_PROJECT" \
             --wait \
-            --timeout 300
+            --timeout 300 \
+            --idempotency-key "ci-be-${{ github.run_id }}-${{ github.run_attempt }}"
 
       - name: TestSprite skipped (no API key)
         if: steps.ts_key.outputs.available == 'false'
